@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ player.first_name }} {{ player.last_name }}</title>
+</head>
+<body>
+    <a href="{% url 'player_list' %}"><< Volver al plantel</a>
+    <hr>
+
+    {% if player.photo %}
+        <img src="{{ player.photo.url }}" alt="Foto de {{ player.first_name }}" width="200">
+    {% endif %}
+
+    <h1>{{ player.first_name }} {{ player.last_name }}</h1>
+    <p><strong>Posición:</strong> {{ player.position }}</p>
+    <p><strong>Edad:</strong> {{ player.age }} años</p>
+    <p><strong>Fecha de Nacimiento:</strong> {{ player.date_of_birth|date:"d/m/Y" }}</p>
+    <p><strong>Lugar de Nacimiento:</strong> {{ player.birth_city }}, {{ player.birth_province }}</p>
+    <hr>
+    <h3>Biografía</h3>
+    <p>{{ player.bio|linebreaks }}</p>
+</body>
+</html>

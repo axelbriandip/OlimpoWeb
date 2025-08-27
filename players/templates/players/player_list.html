@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Plantel de Jugadores</title>
+</head>
+<body>
+    <h1>Nuestro Plantel</h1>
+    <hr>
+    {% for player in players %}
+        <p>
+            <a href="{% url 'player_detail' player.id %}">
+                {{ player.last_name }}, {{ player.first_name }}
+            </a>
+            - ({{ player.position }})
+        </p>
+    {% empty %}
+        <p>No hay jugadores cargados en este momento.</p>
+    {% endfor %}
+</body>
+</html>
