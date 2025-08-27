@@ -1,24 +1,25 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ player.first_name }} {{ player.last_name }}</title>
-</head>
-<body>
-    <a href="{% url 'player_list' %}"><< Volver al plantel</a>
-    <hr>
+{% extends 'base.html' %}
 
-    {% if player.photo %}
-        <img src="{{ player.photo.url }}" alt="Foto de {{ player.first_name }}" width="200">
-    {% endif %}
+{% block title %}{{ player.first_name }} {{ player.last_name }}{% endblock %}
 
-    <h1>{{ player.first_name }} {{ player.last_name }}</h1>
-    <p><strong>Posición:</strong> {{ player.position }}</p>
-    <p><strong>Edad:</strong> {{ player.age }} años</p>
-    <p><strong>Fecha de Nacimiento:</strong> {{ player.date_of_birth|date:"d/m/Y" }}</p>
-    <p><strong>Lugar de Nacimiento:</strong> {{ player.birth_city }}, {{ player.birth_province }}</p>
-    <hr>
-    <h3>Biografía</h3>
-    <p>{{ player.bio|linebreaks }}</p>
-</body>
-</html>
+{% block content %}
+    <div class="row">
+        <div class="col-md-4">
+            {% if player.photo %}
+                <img src="{{ player.photo.url }}" class="img-fluid rounded" alt="Foto de {{ player.first_name }}">
+            {% else %}
+                <div class="bg-secondary text-white text-center p-5 rounded">Sin Foto</div>
+            {% endif %}
+        </div>
+        <div class="col-md-8">
+            <h1>{{ player.first_name }} {{ player.last_name }}</h1>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item"><strong>Posición:</strong> {{ player.position }}</li>
+                <li class="list-group-item"><strong>Edad:</strong> {{ player.age }} años</li>
+                <li class="list-group-item"><strong>Categoría:</strong> {{ player.age_category }}</li>
+                <li class="list-group-item"><strong>Fecha de Nacimiento:</strong> {{ player.date_of_birth|date:"d/m/Y" }}</li>
+            </ul>
+            <a href="{% url 'player_list' %}" class="btn btn-secondary mt-3"><< Volver al plantel</a>
+        </div>
+    </div>
+{% endblock %}

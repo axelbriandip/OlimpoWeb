@@ -1,21 +1,25 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Plantel de Jugadores</title>
-</head>
-<body>
-    <h1>Nuestro Plantel</h1>
-    <hr>
-    {% for player in players %}
-        <p>
-            <a href="{% url 'player_detail' player.id %}">
-                {{ player.last_name }}, {{ player.first_name }}
-            </a>
-            - ({{ player.position }})
-        </p>
-    {% empty %}
-        <p>No hay jugadores cargados en este momento.</p>
-    {% endfor %}
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block title %}Plantel de Jugadores{% endblock %}
+
+{% block content %}
+    <h1 class="mb-4">Nuestro Plantel</h1>
+    <div class="row">
+        {% for player in players %}
+            <div class="col-md-4 mb-3">
+                <div class="card">
+                    {% if player.photo %}
+                        <img src="{{ player.photo.url }}" class="card-img-top" alt="Foto de {{ player.first_name }}">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ player.first_name }} {{ player.last_name }}</h5>
+                        <p class="card-text">{{ player.position }}</p>
+                        <a href="{% url 'player_detail' player.id %}" class="btn btn-primary">Ver Perfil</a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <p>No hay jugadores cargados en este momento.</p>
+        {% endfor %}
+    </div>
+{% endblock %}
