@@ -3,23 +3,57 @@
 {% block title %}{{ player.first_name }} {{ player.last_name }}{% endblock %}
 
 {% block content %}
-    <div class="row">
-        <div class="col-md-4">
-            {% if player.photo %}
-                <img src="{{ player.photo.url }}" class="img-fluid rounded" alt="Foto de {{ player.first_name }}">
-            {% else %}
-                <div class="bg-secondary text-white text-center p-5 rounded">Sin Foto</div>
-            {% endif %}
-        </div>
-        <div class="col-md-8">
-            <h1>{{ player.first_name }} {{ player.last_name }}</h1>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item"><strong>Posición:</strong> {{ player.position }}</li>
-                <li class="list-group-item"><strong>Edad:</strong> {{ player.age }} años</li>
-                <li class="list-group-item"><strong>Categoría:</strong> {{ player.age_category }}</li>
-                <li class="list-group-item"><strong>Fecha de Nacimiento:</strong> {{ player.date_of_birth|date:"d/m/Y" }}</li>
-            </ul>
-            <a href="{% url 'player_list' %}" class="btn btn-secondary mt-3"><< Volver al plantel</a>
+<h1 class="mb-4 text-center">Ficha individual</h1>
+<div class="card shadow-sm">
+
+    <div class="card-body">
+        <div class="row">
+            <div class="col-lg-4 text-center">
+                <div class="player-detail-photo mx-auto mb-3">
+                    {% if player.photo %}
+                        <img src="{{ player.photo.url }}" alt="Foto de {{ player.first_name }}">
+                    {% else %}
+                        <div class="d-flex align-items-center justify-content-center h-100">
+                            <small class="text-muted">Sin Foto</small>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="col-lg-8">
+                <h1 class="h2 mb-0">{{ player.first_name }} {{ player.last_name }}</h1>
+                <p class="h4 text-muted">{{ player.position }}</p>
+                <hr>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <strong>Edad:</strong>
+                        <p class="text-muted mb-0">{{ player.age }} años</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <strong>Categoría:</strong>
+                        <p class="text-muted mb-0">{{ player.age_category }}</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <strong>Fecha de Nacimiento:</strong>
+                        <p class="text-muted mb-0">{{ player.date_of_birth|date:"d/m/Y" }}</p>
+                    </div>
+                     <div class="col-md-6 mb-3">
+                        <strong>Lugar de Nacimiento:</strong>
+                        <p class="text-muted mb-0">{{ player.birth_city }}, {{ player.birth_province }}</p>
+                    </div>
+                </div>
+
+                {% if player.bio %}
+                    <hr>
+                    <h5>Biografía</h5>
+                    <p>{{ player.bio|linebreaks }}</p>
+                {% endif %}
+            </div>
         </div>
     </div>
+    <div class="card-footer text-end">
+        <a href="{% url 'player_list' %}" class="btn btn-secondary"><< Volver al plantel</a>
+    </div>
+</div>
 {% endblock %}

@@ -1,25 +1,58 @@
 {% extends 'base.html' %}
 
-{% block title %}Plantel de Jugadores{% endblock %}
+{% block title %}Olimpo | Planteles{% endblock %}
 
 {% block content %}
-    <h1 class="mb-4">Nuestro Plantel</h1>
-    <div class="row">
-        {% for player in players %}
-            <div class="col-md-4 mb-3">
-                <div class="card">
-                    {% if player.photo %}
-                        <img src="{{ player.photo.url }}" class="card-img-top" alt="Foto de {{ player.first_name }}">
-                    {% endif %}
-                    <div class="card-body">
-                        <h5 class="card-title">{{ player.first_name }} {{ player.last_name }}</h5>
-                        <p class="card-text">{{ player.position }}</p>
-                        <a href="{% url 'player_detail' player.id %}" class="btn btn-primary">Ver Perfil</a>
-                    </div>
-                </div>
-            </div>
-        {% empty %}
-            <p>No hay jugadores cargados en este momento.</p>
+    <h1 class="mb-4 text-center">Nuestros Planteles</h1>
+
+    <div class="text-center mb-5">
+        <a href="{% url 'player_list' %}" class="btn {% if not selected_category %}btn-primary{% else %}btn-outline-primary{% endif %} m-1">
+            Todos
+        </a>
+        {% for category in categories %}
+            <a href="{% url 'player_list' %}?category={{ category }}" class="btn {% if selected_category == category %}btn-primary{% else %}btn-outline-primary{% endif %} m-1">
+                {{ category }}
+            </a>
         {% endfor %}
     </div>
+
+    {% for group_title, players_in_group in grouped_players.items %}
+        <div class="position-group">
+            <h2 class="position-title">{{ group_title }}</h2>
+            <hr class="mb-4">
+            <div class="row">
+                {% for player in players_in_group %}
+                    <div class="col-lg-3 col-md-4 mb-4"">
+                        <div class="card h-100 shadow-sm player-card">
+                            <div class="player-card-img-wrapper">
+                                {% if player.photo %}
+                                    <img src="{{ player.photo.url }}" class="card-img-top" alt="Foto de {{ player.first_name }}">
+                                {% else %}
+                                    <div class="d-flex align-items-center justify-content-center h-100">
+                                        <small class="text-muted">Sin Foto</small>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title">{{ player.first_name }} {{ player.last_name }}</h5>
+                                <p class="card-text text-muted">{{ player.position }}</p>
+                                <div class="mb-3">
+    {% if player.position in "Director Técnico,Ayudante de Campo,Preparador Físico" %}
+        {% for category in player.managed_categories.all %}
+            <span class="badge bg-dark">{{ category.name }}</span>
+        {% endfor %}
+    {% else %}
+        <span class="badge bg-primary">{{ player.age_category }}</span>
+    {% endif %}
+</div>
+                                <a href="{% url 'player_detail' player.id %}" class="btn btn-primary mt-auto">Ver Perfil</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% empty %}
+        <p class="text-center mt-5">No hay jugadores para el filtro seleccionado.</p>
+    {% endfor %}
 {% endblock %}
