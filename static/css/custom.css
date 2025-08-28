@@ -1,0 +1,67 @@
+/* 1. Definición de Variables de Color (Esquema Monocromático) */
+:root {
+    --primary-color: #01197e;
+    --accent-color: #2a7fff;
+    /* Nuevo azul para acentos */
+    --light-gray-bg: #f4f4f9;
+    --dark-text-color: #212529;
+    --medium-gray-color: #6c757d;
+    --font-headings: 'Oswald', sans-serif;
+    --font-body: 'Roboto', sans-serif;
+}
+
+/* 2. Estilos Generales del Cuerpo */
+body {
+    font-family: var(--font-body);
+    background-color: var(--light-gray-bg);
+    color: var(--dark-text-color);
+}
+
+/* 3. Estilos para Títulos */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: var(--font-headings);
+    font-weight: 700;
+}
+
+/* 4. Personalización de Componentes de Bootstrap */
+
+/* Barra de Navegación */
+.navbar.bg-dark {
+    background-color: var(--primary-color) !important;
+}
+
+/* Botones Principales */
+.btn-primary {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+    color: #ffffff;
+    /* Cambiamos el color del texto a blanco para mejor contraste */
+    font-weight: 700;
+}
+
+.btn-primary:hover {
+    /* Oscurecemos ligeramente el azul al pasar el mouse */
+    background-color: #1a6aff;
+    border-color: #1a6aff;
+    color: #ffffff;
+}
+
+/* Tarjetas de Jugador */
+.card {
+    border-color: #dee2e6;
+    /* Borde de la tarjeta más sutil */
+}
+
+.card-title {
+    color: var(--primary-color);
+}
+
+.card-text {
+    color: var(--medium-gray-color);
+    /* Usamos el gris medio para el texto secundario */
+}
