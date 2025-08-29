@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'players',
     'news',
     'fixtures',
+    'core',
 ]
 
 MIDDLEWARE = [

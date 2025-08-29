@@ -18,7 +18,7 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container">
     
-    <a class="navbar-brand d-flex align-items-center" href="#">
+    <a class="navbar-brand d-flex align-items-center" href="{% url 'home' %}">
       <img src="{% static 'imgs/olimpo-shield.png' %}" alt="Escudo Club Olimpo" width="35" height="35" class="d-inline-block align-text-top me-3">
       <span class="d-none d-sm-inline">Club Olimpo</span>
     </a>
@@ -30,18 +30,18 @@
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
         
         <li class="nav-item">
-          <a class="nav-link disabled" aria-disabled="true" href="#">Inicio</a>
-        </li>
+    <a class="nav-link" href="{% url 'home' %}">Inicio</a>
+</li>
         
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             El Club
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item disabled" aria-disabled="true" href="#">Comisión Directiva</a></li>
+            <li><a class="dropdown-item" href="{% url 'board_of_directors' %}">Comisión Directiva</a></li>
             <li><a class="dropdown-item" href="{% url 'player_list' %}">Planteles</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item disabled" aria-disabled="true" href="#">Nuestra Historia</a></li>
+            <li><a class="dropdown-item" href="{% url 'history' %}">Nuestra Historia</a></li>
           </ul>
         </li>
 
