@@ -1,0 +1,79 @@
+/* Estilos Específicos para la Sección Fixture */
+
+.fixture-card {
+    border-radius: 0.75rem;
+    border: 1px solid #e9ecef;
+    overflow: hidden;
+}
+
+.fixture-card .card-body {
+    padding: 1.25rem;
+}
+
+.fixture-card .matchup-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.fixture-card .matchup-row .team-display {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 5px;
+}
+
+.fixture-card .team-shield {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+}
+
+.fixture-card .team-name {
+    font-size: 0.9rem;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.fixture-card .matchup-row .score-display {
+    flex-shrink: 0;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    white-space: nowrap;
+    padding: 0 10px;
+}
+
+/* Scroll Horizontal del Fixture */
+.horizontal-scroll-wrapper {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding: 1rem 0;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+}
+
+.horizontal-scroll-wrapper::-webkit-scrollbar {
+    height: 8px;
+}
+
+.horizontal-scroll-wrapper::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 4px;
+}
+
+.horizontal-scroll-wrapper .fixture-card-wrapper {
+    flex: 0 0 350px;
+    margin-right: 1.5rem;
+}
+
+/* Encabezados de Categoría del Fixture */
+.category-group .category-title {
+    font-size: 1.8rem;
+    color: var(--primary-color);
+}

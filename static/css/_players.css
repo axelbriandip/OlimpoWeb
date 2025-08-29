@@ -1,0 +1,48 @@
+/* Estilos Específicos para la Sección Plantel */
+
+/* Tarjetas de Jugador */
+.player-card {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.player-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+.player-card .card-title {
+    font-size: 1.1rem;
+}
+
+.player-card .card-text {
+    font-size: 0.9rem;
+}
+
+.player-card .badge {
+    font-size: 0.75rem;
+}
+
+/* Contenedor de Imagen Cuadrada (Lista y Detalle de Jugador) */
+.player-card-img-wrapper,
+.player-detail-photo {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    background-color: var(--light-gray-bg);
+    border-radius: .25rem;
+    padding-top: 100%;
+    /* Proporción 1:1 */
+}
+
+.player-card-img-wrapper img,
+.player-detail-photo img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}

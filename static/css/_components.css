@@ -1,0 +1,33 @@
+/* Estilos para Componentes Reutilizables */
+
+/* Barra de Navegación */
+.navbar.bg-dark {
+    background-color: var(--primary-color) !important;
+}
+
+/* Botones Principales */
+.btn-primary {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+    color: #ffffff;
+    font-weight: 700;
+}
+
+.btn-primary:hover {
+    background-color: #1a6aff;
+    border-color: #1a6aff;
+    color: #ffffff;
+}
+
+/* Estilos Genéricos para Tarjetas */
+.card {
+    border-color: #dee2e6;
+}
+
+.card-title {
+    color: var(--primary-color);
+}
+
+.card-text {
+    color: var(--medium-gray-color);
+}

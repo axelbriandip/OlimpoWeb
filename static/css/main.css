@@ -1,0 +1,13 @@
+/* 1. Variables Globales */
+@import url('_variables.css');
+
+/* 2. Estilos Base (reseteo, body, títulos) */
+@import url('_base.css');
+
+/* 3. Componentes Reutilizables (botones, tarjetas genéricas, navbar) */
+@import url('_components.css');
+
+/* 4. Estilos Específicos de cada Sección */
+@import url('_players.css');
+@import url('_news.css');
+@import url('_fixtures.css');

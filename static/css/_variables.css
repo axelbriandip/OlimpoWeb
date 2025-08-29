@@ -1,0 +1,10 @@
+/* Definición de Variables de Color y Fuentes */
+:root {
+    --primary-color: #01197e;
+    --accent-color: #2a7fff;
+    --light-gray-bg: #f4f4f9;
+    --dark-text-color: #212529;
+    --medium-gray-color: #6c757d;
+    --font-headings: 'Oswald', sans-serif;
+    --font-body: 'Roboto', sans-serif;
+}
