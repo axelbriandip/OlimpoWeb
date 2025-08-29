@@ -4,11 +4,12 @@ from django.utils import timezone
 class Category(models.Model):
     """Representa una categoría del club, ej: 'Sub-15', 'Primera'."""
     name = models.CharField("Nombre", max_length=100, unique=True)
+    order = models.PositiveIntegerField("Orden", default=0, help_text="Menor número aparece primero")
     
     class Meta:
         verbose_name = "Categoría"
         verbose_name_plural = "Categorías"
-        ordering = ['name']
+        ordering = ['order', 'name']
 
     def __str__(self):
         return self.name

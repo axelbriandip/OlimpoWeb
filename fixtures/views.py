@@ -13,6 +13,7 @@ class FixtureListView(ListView):
         
         # Obtenemos TODOS los partidos activos, sin filtro de fecha
         fixtures = Fixture.objects.order_by(
+            'category__order',
             'category__name', 
             'display_order', 
             F('match_datetime').asc(nulls_last=True)

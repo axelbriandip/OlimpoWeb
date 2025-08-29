@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Player, Category # Importar Category
+from .models import Player, Category
 
 @admin.register(Player)
 class PlayerAdmin(admin.ModelAdmin):
@@ -9,5 +9,7 @@ class PlayerAdmin(admin.ModelAdmin):
     # 'filter_horizontal' es ideal para campos ManyToManyField
     filter_horizontal = ('managed_categories',)
 
-# Registrar el nuevo modelo
-admin.site.register(Category)
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ('name', 'order')
+    list_editable = ('order',)
