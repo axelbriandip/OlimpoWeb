@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from news.models import Article
 from fixtures.models import Fixture
-from .models import BoardMember
+from .models import BoardMember, TimelineEvent
 from django.utils import timezone
 from collections import OrderedDict
 
@@ -39,3 +39,16 @@ def board_of_directors(request):
         'grouped_members': grouped_members,
     }
     return render(request, 'core/board_of_directors.html', context)
+
+def history(request):
+    """
+    Vista para la página de 'Nuestra Historia'.
+    """
+    # Obtenemos solo los Hitos Principales (los que no tienen padre)
+    # y usamos prefetch_related para cargar eficientemente todos sus sub-hitos en una sola consulta.
+    main_events = TimelineEvent.objects.filter(parent__isnull=True).prefetch_related('sub_events')
+    
+    context = {
+        'main_events': main_events,
+    }
+    return render(request, 'core/history.html', context)

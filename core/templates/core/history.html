@@ -8,10 +8,54 @@
     <p class="lead text-muted">Un recorrido por los momentos que forjaron nuestro club.</p>
 </div>
 
-<div class="row justify-content-center">
-    <div class="col-lg-8">
-        <p>Fundado en el corazón de Río Grande, el Club Olimpo nació de un sueño compartido por un grupo de amigos apasionados por el fútbol...</p>
-        <p>(Continúa la historia aquí)</p>
-    </div>
+<div class="timeline">
+    {% for event in main_events %}
+        <div class="timeline-item">
+            <div class="timeline-content">
+                
+                {% if event.image %}
+                    <div class="news-image-wrapper mb-3">
+                        <img src="{{ event.image.url }}" alt="{{ event.title }}">
+                    </div>
+                {% endif %}
+
+                <h3>{{ event.year }}: {{ event.title }}</h3>
+                
+                <div class="description">
+                    {{ event.description|linebreaks }}
+                </div>
+
+                {% if event.exact_date %}
+                    <p class="date">{{ event.exact_date|date:"d \d\e F \d\e Y" }}</p>
+                {% endif %}
+
+                {% if event.sub_events.all %}
+                    <div class="sub-events">
+                        {% for sub_event in event.sub_events.all %}
+                            <div class="sub-event-item">
+                                {% if sub_event.image %}
+                                    <div class="square-image">
+                                        <img src="{{ sub_event.image.url }}" alt="{{ sub_event.title }}">
+                                    </div>
+                                {% endif %}
+                                <div class="sub-event-details">
+                                    <h6>{{ sub_event.title }}</h6>
+                                    <p class="description">{{ sub_event.description }}</p>
+                                    <p class="date">
+                                        {% if sub_event.exact_date %}
+                                            {{ sub_event.exact_date|date:"d \d\e F \d\e Y" }}
+                                        {% else %}
+                                            {{ sub_event.year }}
+                                        {% endif %}
+                                    </p>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
 </div>
+
 {% endblock %}
