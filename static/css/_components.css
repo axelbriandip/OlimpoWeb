@@ -31,3 +31,38 @@
 .card-text {
     color: var(--medium-gray-color);
 }
+
+/* --- Estilos para mejorar el dropdown en la vista móvil --- */
+@media (max-width: 991.98px) {
+    .navbar-nav .dropdown-menu {
+        /* Quitamos el estilo de "caja flotante" blanca */
+        background-color: transparent;
+        border: none;
+        box-shadow: none;
+
+        /* Añadimos una pequeña sangría para mantener la jerarquía visual */
+        padding: 0 0 0 1.5rem;
+        margin-top: 0;
+    }
+
+    .navbar-nav .dropdown-item {
+        /* Hacemos que los items se parezcan a los links principales del menú */
+        color: rgba(255, 255, 255, 0.75);
+        /* Mismo color que .nav-link inactivo */
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+        font-size: 1rem;
+    }
+
+    .navbar-nav .dropdown-item:hover,
+    .navbar-nav .dropdown-item:focus {
+        color: #ffffff;
+        background-color: transparent;
+        /* Evitamos el fondo azul al pasar el mouse */
+    }
+
+    .navbar-nav .dropdown-divider {
+        /* Ocultamos la línea separadora en la vista móvil */
+        display: none;
+    }
+}
