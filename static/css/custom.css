@@ -187,3 +187,142 @@ h6 {
     object-fit: cover;
     object-position: center;
 }
+
+/* Estilos para las tarjetas de fixture */
+.fixture-card {
+    border-radius: 0.75rem;
+    /* Bordes más redondeados */
+    border: 1px solid #e9ecef;
+    /* Borde sutil */
+    overflow: hidden;
+    /* Para que los escudos no se salgan */
+}
+
+.fixture-card .card-body {
+    padding: 1.25rem;
+    /* Espaciado interno */
+}
+
+.fixture-card .team-shield {
+    width: 40px;
+    /* Tamaño de los escudos */
+    height: 40px;
+    object-fit: contain;
+    /* Asegura que el escudo completo quepa */
+}
+
+.fixture-card .score-display {
+    font-size: 1.5rem;
+    /* Tamaño grande para el resultado */
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.fixture-card .team-name {
+    flex-shrink: 1;
+    /* Permite que el nombre del equipo se encoja si es muy largo */
+    white-space: nowrap;
+    /* Evita saltos de línea */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* Añade "..." si el nombre es demasiado largo */
+    max-width: calc(100% - 40px - 10px);
+    /* Ajusta según el tamaño del escudo y margen */
+}
+
+/* Estilo para los encabezados de fecha */
+.date-header {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    margin-top: 2.5rem;
+    margin-bottom: 1.5rem;
+    font-size: 1.6rem;
+    display: inline-block;
+    /* Para que el fondo solo abarque el texto */
+    width: auto;
+    max-width: 100%;
+}
+
+/* Contenedor para el scroll horizontal */
+.horizontal-scroll-wrapper {
+    display: flex;
+    /* Activa Flexbox */
+    flex-wrap: nowrap;
+    /* Evita que las tarjetas salten a la siguiente línea */
+    overflow-x: auto;
+    /* Muestra la barra de scroll solo si es necesario */
+    padding: 1rem 0;
+    /* Espaciado interno */
+
+    /* Mejora el scroll en algunos dispositivos */
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    /* Para Firefox */
+}
+
+/* Estilo para la barra de scroll (opcional, pero se ve bien) */
+.horizontal-scroll-wrapper::-webkit-scrollbar {
+    height: 8px;
+}
+
+.horizontal-scroll-wrapper::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 4px;
+}
+
+/* Contenedor para apilar escudo y nombre */
+.fixture-card .team-display {
+    display: flex;
+    flex-direction: column;
+    /* Apila los elementos verticalmente */
+    align-items: center;
+    /* Centra horizontalmente */
+    text-align: center;
+}
+
+/* Estilos para los escudos */
+.fixture-card .team-shield {
+    width: 50px;
+    /* Tamaño un poco más grande */
+    height: 50px;
+    object-fit: contain;
+}
+
+
+/* Ajuste a las tarjetas dentro del contenedor de scroll */
+.horizontal-scroll-wrapper .fixture-card-wrapper {
+    flex: 0 0 350px;
+    /* Ancho mínimo/fijo para cada tarjeta */
+    margin-right: 1.5rem;
+    /* Espacio entre tarjetas */
+}
+
+.fixture-card .matchup-row {
+    display: flex;
+    align-items: center;
+    /* Centra todo verticalmente */
+    justify-content: space-between;
+    /* Distribuye el espacio */
+}
+
+.fixture-card .matchup-row .team-display {
+    flex: 1;
+    /* Hace que ambos equipos ocupen el espacio disponible equitativamente */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.fixture-card .matchup-row .score-display {
+    flex-shrink: 0;
+    /* Evita que el resultado se encoja */
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    white-space: nowrap;
+    padding: 0 10px;
+    /* Le da un espacio fijo al resultado */
+}

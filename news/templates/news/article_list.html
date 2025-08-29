@@ -3,8 +3,10 @@
 {% block title %}Noticias del Club{% endblock %}
 
 {% block content %}
-<h1 class="mb-4 text-center">Noticias</h1>
-
+<div class="text-center mb-4">
+    <h1>Últimas Noticias</h1>
+    <p class="lead text-muted">Mantenete al día con todas las novedades del Club Olimpo.</p>
+</div>
 <div class="text-center mb-5">
     <a href="{% url 'news_list' %}" class="btn {% if not selected_category_slug %}btn-primary{% else %}btn-outline-primary{% endif %} m-1">
         Todas

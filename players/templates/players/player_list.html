@@ -3,8 +3,10 @@
 {% block title %}Olimpo | Planteles{% endblock %}
 
 {% block content %}
-    <h1 class="mb-4 text-center">Nuestros Planteles</h1>
-
+<div class="text-center mb-5">
+    <h1>Nuestros Planteles</h1>
+    <p class="lead text-muted">Conocé a los jugadores y al cuerpo técnico que defienden nuestros colores.</p>
+</div>
     <div class="text-center mb-5">
         <a href="{% url 'player_list' %}" class="btn {% if not selected_category %}btn-primary{% else %}btn-outline-primary{% endif %} m-1">
             Todos
