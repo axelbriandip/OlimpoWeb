@@ -7,7 +7,8 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('players/', include('players.urls')), # Conecta las URLs de nuestra app
+    path('players/', include('players.urls')),
+    path('news/', include('news.urls')),
 ]
 
 # Esta línea es crucial para que se vean las fotos de los jugadores

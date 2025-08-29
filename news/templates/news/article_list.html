@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}Noticias del Club{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Últimas Noticias</h1>
+
+<div class="text-center mb-5">
+    <a href="{% url 'news_list' %}" class="btn {% if not selected_category_slug %}btn-primary{% else %}btn-outline-primary{% endif %} m-1">
+        Todas
+    </a>
+    {% for category in categories %}
+        <a href="{% url 'news_list' %}?category={{ category.slug }}" class="btn {% if selected_category_slug == category.slug %}btn-primary{% else %}btn-outline-primary{% endif %} m-1">
+            {{ category.name }}
+        </a>
+    {% endfor %}
+</div>
+
+{% for article in articles %}
+    <div class="card mb-3 shadow-sm">
+        <div class="row g-0">
+            <div class="col-md-4">
+                {% if article.featured_image %}
+                    <div class="news-image-wrapper"> 
+                        <img src="{{ article.featured_image.url }}" alt="{{ article.title }}">
+                    </div>
+                {% else %}
+                    <div class="news-image-wrapper d-flex align-items-center justify-content-center text-muted">
+                        Sin Imagen
+                    </div>
+                {% endif %}
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title">{{ article.title }}</h5>
+                    <p class="card-text"><small class="text-muted">{{ article.created_on|date:"d F, Y" }}</small></p>
+                    <p class="card-text">{{ article.excerpt }}</p>
+                    <a href="{% url 'article_detail' article.slug %}" class="btn btn-primary">Leer Más</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% empty %}
+    <p class="text-center">No hay noticias para el filtro seleccionado.</p>
+{% endfor %}
+
+{% endblock %}

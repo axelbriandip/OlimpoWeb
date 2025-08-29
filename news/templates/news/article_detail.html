@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ article.title }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <h1 class="display-5">{{ article.title }}</h1>
+        <p class="lead">{{ article.subtitle }}</p>
+        <p class="text-muted">Publicado el {{ article.created_on|date:"d F, Y" }}</p>
+        <hr>
+        
+        {% if article.featured_image %}
+            <div class="news-image-wrapper mb-4">
+                <img src="{{ article.featured_image.url }}" alt="{{ article.title }}">
+            </div>
+        {% endif %}
+
+        <div class="article-content">
+            {{ article.content|linebreaks }}
+        </div>
+
+        <hr class="mt-5">
+        <a href="{% url 'news_list' %}" class="btn btn-secondary"><< Volver a Noticias</a>
+    </div>
+</div>
+{% endblock %}
