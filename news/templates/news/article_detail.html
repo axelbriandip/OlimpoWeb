@@ -19,6 +19,29 @@
         <div class="article-content">
             {{ article.content|linebreaks }}
         </div>
+        {% if recommended_articles %}
+            <div class="recommended-news mt-5">
+                <h3 class="mb-4">También te puede interesar</h3>
+                <div class="row">
+                    {% for recommended in recommended_articles %}
+                        <div class="col-md-4 mb-3">
+                            <div class="card h-100 shadow-sm">
+                                {% if recommended.featured_image %}
+                                    <div class="news-image-wrapper">
+                                        <img src="{{ recommended.featured_image.url }}" alt="{{ recommended.title }}">
+                                    </div>
+                                {% endif %}
+                                <div class="card-body">
+                                    <h5 class="card-title h6">
+                                        <a href="{% url 'article_detail' recommended.slug %}" class="text-decoration-none">{{ recommended.title }}</a>
+                                    </h5>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
 
         <hr class="mt-5">
         <a href="{% url 'news_list' %}" class="btn btn-secondary"><< Volver a Noticias</a>

@@ -31,12 +31,33 @@ class ArticleListView(ListView):
 
 class ArticleDetailView(DetailView):
     """
-    Muestra el contenido completo de un único artículo.
+    Muestra el contenido completo de un único artículo y una lista de artículos recomendados.
     """
     model = Article
     template_name = 'news/article_detail.html'
     context_object_name = 'article'
 
     def get_queryset(self):
-        # También nos aseguramos de que solo se pueda acceder a artículos publicados.
+        # Nos aseguramos de que solo se pueda acceder a artículos publicados.
         return Article.objects.filter(status='PB')
+
+    def get_context_data(self, **kwargs):
+        # Obtenemos el contexto base
+        context = super().get_context_data(**kwargs)
+        
+        # Obtenemos el artículo actual que se está mostrando
+        current_article = self.get_object()
+        
+        # Buscamos otros artículos en la misma categoría, excluyendo el actual.
+        # Los ordenamos por fecha para mostrar los más recientes y tomamos hasta 3.
+        recommended_articles = Article.objects.filter(
+            status='PB',
+            category=current_article.category
+        ).exclude(
+            id=current_article.id
+        ).order_by('-created_on')[:3]
+        
+        # Añadimos la lista de artículos recomendados al contexto
+        context['recommended_articles'] = recommended_articles
+        
+        return context
