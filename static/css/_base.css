@@ -225,3 +225,86 @@ h6 {
         height: 120px;
     }
 }
+
+/* --- Estilos para el Carrusel Infinito de Sponsors --- */
+.sponsors-section {
+    padding: 2rem 0;
+    background-color: var(--light-gray-bg);
+    /* Un fondo blanco para destacar los logos */
+    border-top: 1px solid #e9ecef;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.logos-wrapper {
+    overflow: hidden;
+    /* Oculta lo que se sale del contenedor */
+    padding: 2rem 0;
+    position: relative;
+    width: 100%;
+}
+
+/* Efecto de degradado en los bordes para un fundido suave */
+.logos-wrapper::before,
+.logos-wrapper::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    width: 100px;
+    height: 100%;
+    z-index: 2;
+}
+
+.logos-wrapper::before {
+    left: 0;
+    background: linear-gradient(to left, rgba(255, 255, 255, 0), var(--light-gray-bg));
+}
+
+.logos-wrapper::after {
+    right: 0;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0), var(--light-gray-bg));
+}
+
+/* El contenedor que se anima */
+.logos-slider {
+    display: flex;
+    /* Duplicamos el contenido, por eso la animación se mueve solo el 50% */
+    animation: scroll 30s linear infinite;
+}
+
+/* La animación de scroll */
+@keyframes scroll {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+/* Cada logo individual */
+.logos-slider .sponsor-logo-item {
+    flex-shrink: 0;
+    width: 200px;
+    /* Ancho fijo para cada sponsor */
+    padding: 0 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.logos-slider img {
+    max-height: 60px;
+    /* Altura máxima para los logos */
+    width: 100%;
+    object-fit: contain;
+    filter: grayscale(100%);
+    opacity: 0.7;
+    transition: all 0.3s ease;
+}
+
+.logos-slider img:hover {
+    filter: grayscale(0%);
+    opacity: 1;
+    transform: scale(1.1);
+}

@@ -101,5 +101,47 @@
             </div>
         </div>
     </div>
+    
+    <hr class="my-5">
+
+    {% if sponsors %}
+    <div class="sponsors-section">
+        <div class="container text-center">
+            <div class="container text-center">
+                <h2 class="mb-3">Nuestros Sponsors</h2>
+                <p class="lead text-muted">Agradecemos a las empresas y personas que confían y apoyan nuestro proyecto.</p>
+            </div>
+            
+            <div class="logos-wrapper">
+                <div class="logos-slider">
+                    {% for sponsor in sponsors %}
+                        <div class="sponsor-logo-item">
+                            {% if sponsor.website_url %}
+                                <a href="{{ sponsor.website_url }}" target="_blank" rel="noopener noreferrer">
+                                    <img src="{{ sponsor.logo.url }}" alt="{{ sponsor.name }}">
+                                </a>
+                            {% else %}
+                                <img src="{{ sponsor.logo.url }}" alt="{{ sponsor.name }}">
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                    
+                    {% for sponsor in sponsors %}
+                        <div class="sponsor-logo-item">
+                            {% if sponsor.website_url %}
+                                <a href="{{ sponsor.website_url }}" target="_blank" rel="noopener noreferrer">
+                                    <img src="{{ sponsor.logo.url }}" alt="{{ sponsor.name }}">
+                                </a>
+                            {% else %}
+                                <img src="{{ sponsor.logo.url }}" alt="{{ sponsor.name }}">
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
 </div>
 {% endblock %}
