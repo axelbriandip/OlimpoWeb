@@ -2,7 +2,7 @@ from django.shortcuts import render
 from news.models import Article
 from sponsors.models import Sponsor
 from fixtures.models import Fixture
-from .models import BoardMember, TimelineEvent
+from .models import BoardMember, TimelineEvent, Testimonial
 from django.utils import timezone
 from collections import OrderedDict
 
@@ -10,11 +10,13 @@ def home(request):
     # Vista para la página de inicio.
     latest_articles = Article.objects.filter(status='PB').order_by('-created_on')[:3]
     next_fixture = Fixture.objects.filter(match_datetime__gte=timezone.now()).order_by('match_datetime').first()
-    sponsors = Sponsor.objects.all() # <--- OBTENEMOS TODOS LOS SPONSORS
+    sponsors = Sponsor.objects.all()
+    featured_testimonials = Testimonial.objects.filter(is_featured=True)
     context = {
         'latest_articles': latest_articles,
         'next_fixture': next_fixture,
         'sponsors': sponsors,
+        'featured_testimonials': featured_testimonials,
     }
     return render(request, 'core/home.html', context)
 

@@ -104,6 +104,30 @@
     
     <hr class="my-5">
 
+    {% if featured_testimonials %}
+    <div class="container text-center mb-5">
+        <h2 class="mb-3">La Voz de Nuestra Gente</h2>
+        <div class="row mt-5">
+            {% for testimonial in featured_testimonials %}
+                <div class="col-md-4 mb-4">
+                    <div class="testimonial-card">
+                        {% if testimonial.photo %}
+                            <img src="{{ testimonial.photo.url }}" class="testimonial-photo" alt="Foto de {{ testimonial.author }}">
+                        {% endif %}
+                        <blockquote class="testimonial-quote">
+                            "{{ testimonial.quote }}"
+                        </blockquote>
+                        <cite class="testimonial-author">{{ testimonial.author }}</cite>
+                        <p class="testimonial-relation">{{ testimonial.relation }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <hr class="my-5">
+
     {% if sponsors %}
     <div class="sponsors-section">
         <div class="container text-center">

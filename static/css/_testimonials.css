@@ -1,0 +1,40 @@
+/* --- Estilos para la Sección de Testimonios --- */
+.testimonial-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1.5rem;
+}
+
+.testimonial-photo {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    /* Foto redonda */
+    object-fit: cover;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.testimonial-quote {
+    font-family: Georgia, serif;
+    /* Fuente con serifas para las citas */
+    font-size: 1.1rem;
+    font-style: italic;
+    color: var(--medium-gray-color);
+    border-left: 3px solid var(--accent-color);
+    padding-left: 1rem;
+    margin: 0 0 1rem 0;
+}
+
+.testimonial-author {
+    font-family: var(--font-headings);
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--primary-color);
+}
+
+.testimonial-relation {
+    font-size: 0.9rem;
+    color: var(--medium-gray-color);
+}

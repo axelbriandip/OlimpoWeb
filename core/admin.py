@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import BoardMember, TimelineEvent
+from .models import BoardMember, TimelineEvent, Testimonial
 
 @admin.register(BoardMember)
 class BoardMemberAdmin(admin.ModelAdmin):
@@ -20,3 +20,9 @@ class TimelineEventAdmin(admin.ModelAdmin):
             'fields': ('description', 'image')
         }),
     )
+
+@admin.register(Testimonial)
+class TestimonialAdmin(admin.ModelAdmin):
+    list_display = ('author', 'relation', 'is_featured')
+    list_filter = ('is_featured',)
+    list_editable = ('is_featured',)

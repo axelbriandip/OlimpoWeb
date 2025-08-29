@@ -54,3 +54,24 @@ class TimelineEvent(models.Model):
 
     def __str__(self):
         return f"{self.year} - {self.title}"
+
+class Testimonial(models.Model):
+    """Representa un testimonio de un miembro, padre o jugador."""
+    quote = models.TextField("Cita o Testimonio")
+    author = models.CharField("Autor", max_length=100)
+    relation = models.CharField("Relación con el Club", max_length=100, 
+                                help_text="Ej: Padre de jugador Sub-15, Socio Fundador, Jugadora de Primera")
+    photo = models.ImageField("Foto (Opcional)", upload_to='testimonials/', blank=True, null=True)
+    is_featured = models.BooleanField(
+        "Destacar en Inicio", 
+        default=False,
+        help_text="Marcar para que este testimonio pueda aparecer en la página de inicio."
+    )
+    
+    class Meta:
+        verbose_name = "Testimonio"
+        verbose_name_plural = "Testimonios"
+        ordering = ['author']
+
+    def __str__(self):
+        return f'Testimonio de {self.author}'
