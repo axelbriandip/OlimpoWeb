@@ -3,6 +3,7 @@ from news.models import Article
 from fixtures.models import Fixture
 from .models import BoardMember
 from django.utils import timezone
+from collections import OrderedDict
 
 def home(request):
     # Vista para la página de inicio.
@@ -20,9 +21,21 @@ def history(request):
     return render(request, 'core/history.html')
 
 def board_of_directors(request):
-    # Vista para la página de la 'Comisión Directiva'.
     members = BoardMember.objects.all()
+    
+    # Creamos un diccionario para agrupar los miembros
+    grouped_members = OrderedDict()
+    
+    # Definimos el orden en que queremos que aparezcan los grupos
+    group_order = ['Mesa Directiva', 'Vocales', 'Comisión Fiscalizadora']
+
+    for group in group_order:
+        # Filtramos los miembros para cada grupo
+        members_in_group = [m for m in members if m.group == group]
+        if members_in_group:
+            grouped_members[group] = members_in_group
+            
     context = {
-        'members': members,
+        'grouped_members': grouped_members,
     }
     return render(request, 'core/board_of_directors.html', context)

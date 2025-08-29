@@ -1,34 +1,39 @@
 {% extends 'base.html' %}
 
-{% block title %}Board of Directors{% endblock %}
+{% block title %}Comisión Directiva{% endblock %}
 
 {% block content %}
 <div class="text-center mb-5">
-    <h1>Board of Directors</h1>
+    <h1>Comisión Directiva</h1>
     <p class="lead text-muted">Las personas que guían el presente y futuro de Olimpo.</p>
 </div>
 
-<div class="row justify-content-center">
-    {% for member in members %}
-    <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-        <div class="card h-100 shadow-sm text-center">
-            <div class="player-card-img-wrapper">
-                {% if member.photo %}
-                    <img src="{{ member.photo.url }}" class="card-img-top" alt="Foto de {{ member.full_name }}">
-                {% else %}
-                    <div class="d-flex align-items-center justify-content-center h-100">
-                        <small class="text-muted">Sin Foto</small>
+{% for group_name, members_in_group in grouped_members.items %}
+    <div class="group-section mb-5">
+        <h2 class="group-title">{{ group_name }}</h2>
+        <hr>
+        <div class="row justify-content-center">
+            {% for member in members_in_group %}
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                <div class="card h-100 shadow-sm text-center">
+                    <div class="player-card-img-wrapper">
+                        {% if member.photo %}
+                            <img src="{{ member.photo.url }}" class="card-img-top" alt="Foto de {{ member.full_name }}">
+                        {% else %}
+                            <div class="d-flex align-items-center justify-content-center h-100"><small class="text-muted">Sin Foto</small></div>
+                        {% endif %}
                     </div>
-                {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ member.full_name }}</h5>
+                        <p class="card-text text-muted">{{ member.role }}</p>
+                    </div>
+                </div>
             </div>
-            <div class="card-body">
-                <h5 class="card-title">{{ member.full_name }}</h5>
-                <p class="card-text text-muted">{{ member.role }}</p>
-            </div>
+            {% endfor %}
         </div>
     </div>
-    {% empty %}
+{% empty %}
     <p class="text-center">La información de la Comisión Directiva será publicada próximamente.</p>
-    {% endfor %}
-</div>
+{% endfor %}
+
 {% endblock %}
