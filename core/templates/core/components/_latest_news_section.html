@@ -1,0 +1,18 @@
+<div class="col-lg-4">
+            <h2 class="mb-4">Últimas Noticias</h2>
+            <div class="list-group">
+                {% for article in latest_articles %}
+                    <a href="{% url 'article_detail' article.slug %}" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">{{ article.title }}</h6>
+                        </div>
+                        <small class="text-muted">{{ article.created_on|date:"d F, Y" }}</small>
+                    </a>
+                {% empty %}
+                    <p>No hay noticias recientes.</p>
+                {% endfor %}
+            </div>
+            <div class="mt-3 text-end">
+                <a href="{% url 'news_list' %}" class="btn btn-sm btn-outline-primary">Ver todas las noticias</a>
+            </div>
+        </div>
