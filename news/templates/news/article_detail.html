@@ -43,8 +43,11 @@
             </div>
         {% endif %}
 
-        <hr class="mt-5">
         <a href="{% url 'news_list' %}" class="btn btn-secondary"><< Volver a Noticias</a>
     </div>
 </div>
+
+<hr class="my-5">
+{% include 'core/components/_sponsors_section.html' %}
+
 {% endblock %}

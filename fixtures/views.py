@@ -3,6 +3,7 @@ from .models import Fixture, Category
 from collections import OrderedDict
 from django.utils import timezone
 from django.db.models import F
+from sponsors.models import Sponsor
 
 class FixtureListView(ListView):
     model = Fixture
@@ -10,6 +11,7 @@ class FixtureListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['sponsors'] = Sponsor.objects.all()
         
         # Obtenemos TODOS los partidos activos, sin filtro de fecha
         fixtures = Fixture.objects.order_by(

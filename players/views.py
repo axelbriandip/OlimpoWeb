@@ -2,6 +2,7 @@ from collections import OrderedDict
 from django.views.generic import ListView, DetailView
 from .models import Player, Category
 from django.db.models import Q
+from sponsors.models import Sponsor
 
 class PlayerListView(ListView):
     model = Player
@@ -12,7 +13,8 @@ class PlayerListView(ListView):
         
         # --- 1. Lógica de Filtro ---
         all_players = Player.objects.filter(is_active=True).order_by('last_name')
-        context['categories'] = Category.objects.all() # Las categorías para los botones ahora vienen de la DB
+        context['categories'] = Category.objects.all()
+        context['sponsors'] = Sponsor.objects.all()
         
         selected_category_name = self.request.GET.get('category')
         players_to_display = all_players

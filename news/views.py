@@ -1,5 +1,6 @@
 from django.views.generic import ListView, DetailView
 from .models import Article, NewsCategory
+from sponsors.models import Sponsor
 
 class ArticleListView(ListView):
     model = Article
@@ -23,6 +24,7 @@ class ArticleListView(ListView):
         
         # Añadimos la lista de todas las categorías para poder crear los botones de filtro.
         context['categories'] = NewsCategory.objects.all()
+        context['sponsors'] = Sponsor.objects.all()
         
         # Guardamos la categoría seleccionada para resaltar el botón activo.
         context['selected_category_slug'] = self.request.GET.get('category')
@@ -44,6 +46,7 @@ class ArticleDetailView(DetailView):
     def get_context_data(self, **kwargs):
         # Obtenemos el contexto base
         context = super().get_context_data(**kwargs)
+        context['sponsors'] = Sponsor.objects.all()
         
         # Obtenemos el artículo actual que se está mostrando
         current_article = self.get_object()
