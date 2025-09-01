@@ -3,6 +3,7 @@ from news.models import Article
 from sponsors.models import Sponsor
 from fixtures.models import Fixture
 from .models import BoardMember, TimelineEvent, Testimonial
+from gallery.models import  Album
 from django.utils import timezone
 from collections import OrderedDict
 
@@ -12,11 +13,13 @@ def home(request):
     next_fixture = Fixture.objects.filter(match_datetime__gte=timezone.now()).order_by('match_datetime').first()
     sponsors = Sponsor.objects.all()
     featured_testimonials = Testimonial.objects.filter(is_featured=True)
+    latest_albums = Album.objects.order_by('-created_on')[:3]
     context = {
         'latest_articles': latest_articles,
         'next_fixture': next_fixture,
         'sponsors': sponsors,
         'featured_testimonials': featured_testimonials,
+        'latest_albums': latest_albums,
     }
     return render(request, 'core/home.html', context)
 

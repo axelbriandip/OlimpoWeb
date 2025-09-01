@@ -1,0 +1,32 @@
+{% if latest_albums %}
+<div class="container text-center">
+    <h2 class="mb-3">Vistazo a la Galería</h2>
+    <p class="lead text-muted">Los últimos momentos de nuestro club en imágenes.</p>
+    <div class="row mt-4">
+        {% for album in latest_albums %}
+            <div class="col-lg-4 col-md-6 mb-4">
+                <a href="{% url 'album_detail' album.pk %}" class="text-decoration-none">
+                    <div class="card album-card shadow-sm h-100">
+                        <div class="album-card-image-wrapper">
+                            {% with album.photos.first as cover_photo %}
+                                {% if cover_photo %}
+                                    <img src="{{ cover_photo.image.url }}" alt="Foto de portada para {{ album.title }}">
+                                {% else %}
+                                    <div class="d-flex align-items-center justify-content-center h-100 text-muted">Sin fotos</div>
+                                {% endif %}
+                            {% endwith %}
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ album.title }}</h5>
+                            <small class="text-muted">{{ album.photos.count }} foto{{ album.photos.count|pluralize:"s" }}</small>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="mt-3">
+        <a href="{% url 'album_list' %}" class="btn btn-outline-primary">Ver Galería Completa</a>
+    </div>
+</div>
+{% endif %}
