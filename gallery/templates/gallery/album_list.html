@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Galería de Fotos{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="text-center mb-5">
+        <h1>Galería de Fotos</h1>
+        <p class="lead text-muted">Reviví los mejores momentos de nuestro club.</p>
+    </div>
+
+    <div class="row">
+        {% for album in albums %}
+            <div class="col-lg-4 col-md-6 mb-4">
+                <a href="{% url 'album_detail' album.pk %}" class="text-decoration-none">
+                    <div class="card album-card shadow-sm h-100">
+                        <div class="album-card-image-wrapper">
+                            {% with album.photos.first as cover_photo %}
+                                {% if cover_photo %}
+                                    <img src="{{ cover_photo.image.url }}" alt="Foto de portada para {{ album.title }}">
+                                {% else %}
+                                    <div class="d-flex align-items-center justify-content-center h-100 text-muted">Sin fotos</div>
+                                {% endif %}
+                            {% endwith %}
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ album.title }}</h5>
+                            <small class="text-muted">{{ album.photos.count }} foto{{ album.photos.count|pluralize:"s" }}</small>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        {% empty %}
+            <p class="text-center">No hay álbumes para mostrar en este momento.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

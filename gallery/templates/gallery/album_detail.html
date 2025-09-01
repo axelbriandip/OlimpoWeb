@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ album.title }}{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="text-center mb-5">
+        <h1>{{ album.title }}</h1>
+        {% if album.description %}
+            <p class="lead text-muted">{{ album.description }}</p>
+        {% endif %}
+        <a href="{% url 'album_list' %}" class="btn btn-outline-secondary btn-sm mb-4"><< Volver a todos los álbumes</a>
+    </div>
+
+    <div class="row g-3">
+        {% for photo in album.photos.all %}
+            <div class="col-lg-3 col-md-4 col-6">
+                <a href="#" class="gallery-photo-link" 
+                data-bs-toggle="modal" 
+                data-bs-target="#galleryModal" 
+                data-img-src="{{ photo.image.url }}" 
+                data-img-title="{{ photo.title }}"
+                data-album-title="{{ album.title }}">
+                    <div class="gallery-preview-item">
+                        <img src="{{ photo.image.url }}" alt="{{ photo.title }}">
+                    </div>
+                </a>
+            </div>
+        {% empty %}
+            <p class="text-center">Este álbum todavía no tiene fotos.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

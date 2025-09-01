@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'fixtures',
     'core',
     'sponsors',
+    'gallery',
 ]
 
 MIDDLEWARE = [
