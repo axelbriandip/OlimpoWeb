@@ -32,7 +32,21 @@
                     </div>
                     <div class="col-md-6 mb-3">
                         <strong>Categoría:</strong>
-                        <p class="text-muted mb-0">{{ player.age_category }}</p>
+                        <p class="text-muted mb-0">
+                            {# Condición: Verificamos si la persona es del Cuerpo Técnico #}
+                            {% if player.position in "Director Técnico,Ayudante de Campo,Preparador Físico" and player.managed_categories.all %}
+                                {# Si lo es, mostramos las categorías que dirige #}
+                                {% for category in player.managed_categories.all %}
+                                    {{ category.name }}{% if not forloop.last %}, {% endif %}
+                                {% endfor %}
+                            {% elif player.category %}
+                                {# Si no, mostramos su categoría fija (ej: Primera) si la tiene #}
+                                {{ player.category.name }}
+                            {% else %}
+                                {# Si no, mostramos su categoría por edad #}
+                                {{ player.age_category }}
+                            {% endif %}
+                        </p>
                     </div>
                     <div class="col-md-6 mb-3">
                         <strong>Fecha de Nacimiento:</strong>

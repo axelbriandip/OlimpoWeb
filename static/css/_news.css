@@ -19,4 +19,16 @@
     height: 100%;
     object-fit: cover;
     object-position: center;
+    /* Añadimos la transición para el hover */
+    transition: filter 0.3s ease-in-out, transform 0.3s ease-in-out;
+    /* filter: grayscale(100%); */
+    /* Inicialmente en blanco y negro */
+}
+
+/* Efecto hover sobre el contenedor */
+.news-image-wrapper:hover img {
+    /* filter: grayscale(0%); */
+    /* Vuelve a color */
+    transform: scale(1.05);
+    /* Aplica el zoom */
 }

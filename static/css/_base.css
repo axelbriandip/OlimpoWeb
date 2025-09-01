@@ -195,8 +195,8 @@ h6 {
 }
 
 /* 5. Efecto Hover en Blanco y Negro para TODAS las imágenes del timeline */
-.news-image-wrapper img,
-.square-image img {
+.timeline .news-image-wrapper img,
+.timeline .square-image img {
     filter: grayscale(100%);
     transition: filter 0.3s ease-in-out, transform 0.3s ease-in-out;
     /* Añadimos transform a la transición */
@@ -209,8 +209,8 @@ h6 {
     object-position: center;
 }
 
-.news-image-wrapper:hover img,
-.square-image:hover img {
+.timeline .news-image-wrapper:hover img,
+.timeline .square-image:hover img {
     filter: grayscale(0%);
     transform: scale(1.05);
     /* Efecto de zoom para ambas */
@@ -219,7 +219,7 @@ h6 {
 
 /* 6. Media Query para hacer la imagen del sub-hito más grande en pantallas mayores */
 @media (min-width: 768px) {
-    .square-image {
+    .timeline .square-image {
         width: 120px;
         /* Nuevo tamaño para tablet y desktop */
         height: 120px;

@@ -1,0 +1,112 @@
+/* --- Estilos para el Footer (Diseño Impactante con CTA) --- */
+
+/* 1. Sección de Llamada a la Acción (Pre-Footer) */
+.pre-footer-cta {
+    position: relative;
+    padding: 5rem 1rem;
+    text-align: center;
+    color: white;
+    overflow: hidden;
+    /* MUY IMPORTANTE: para que el zoom no se desborde */
+}
+
+/* CAPA DE IMAGEN DE FONDO (esta es la que animaremos) */
+.pre-footer-cta::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('/static/imgs/footer-bg.jpg') no-repeat center center/cover;
+    z-index: 1;
+    transition: transform 0.4s ease-in-out;
+    /* Transición suave para el zoom */
+}
+
+/* EL EFECTO HOVER que agranda la capa de la imagen */
+.pre-footer-cta:hover::before {
+    transform: scale(1.05);
+    /* La agrandamos un 5% */
+}
+
+/* CAPA DE COLOR OSCURO (para legibilidad del texto) */
+.pre-footer-cta::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(1, 25, 126, 0.7);
+    /* Azul primario con 70% de opacidad */
+    z-index: 2;
+}
+
+/* El contenido se posiciona por encima de las dos capas */
+.pre-footer-cta .container {
+    position: relative;
+    z-index: 3;
+}
+
+.pre-footer-cta h2 {
+    font-size: 2.8rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.pre-footer-cta p {
+    font-size: 1.25rem;
+    margin-bottom: 2rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* 2. Footer Principal (Simple y Oscuro) */
+.site-footer {
+    background-color: var(--primary-color);
+    /* Negro casi puro */
+    color: rgba(255, 255, 255, 0.5);
+    padding: 2rem 0;
+    text-align: center;
+}
+
+.site-footer .social-icons {
+    margin-bottom: 1rem;
+}
+
+.site-footer .social-icons a {
+    font-size: 1.5rem;
+    color: rgba(255, 255, 255, 0.5);
+    margin: 0 0.75rem;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.site-footer .social-icons a:hover {
+    color: white;
+    transform: scale(1.1);
+}
+
+.site-footer .footer-copyright {
+    font-size: 0.8rem;
+}
+
+/* 3. Estilos para el enlace de créditos en el footer */
+.footer-copyright a {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.footer-copyright a:hover {
+    color: #ffffff;
+    text-decoration: underline;
+}
+
+/* Estilo para el enlace al panel de admin en el footer */
+.footer-copyright .admin-link {
+    color: var(--accent-color);
+    /* Usa el color de acento para destacarlo sutilmente */
+    font-weight: 700;
+}
