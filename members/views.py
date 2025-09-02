@@ -3,6 +3,7 @@ from django.contrib import messages
 from .forms import UserRegisterForm
 from .models import Profile
 from django.contrib.auth.decorators import login_required
+from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
 
 def register(request):
     """
@@ -39,10 +40,30 @@ def register(request):
 @login_required
 def profile(request):
     """
-    Muestra la página de perfil del socio que ha iniciado sesión.
+    Gestiona la visualización y actualización del perfil del socio.
     """
-    # El objeto 'request.user' siempre contiene al usuario que ha iniciado sesión
-    return render(request, 'members/profile.html')
+    if request.method == 'POST':
+        # Si se envía el formulario, procesamos los datos
+        u_form = UserUpdateForm(request.POST, instance=request.user)
+        p_form = ProfileUpdateForm(request.POST, instance=request.user.profile)
+        
+        if u_form.is_valid() and p_form.is_valid():
+            u_form.save()
+            p_form.save()
+            messages.success(request, '¡Tu perfil ha sido actualizado con éxito!')
+            return redirect('profile') # Redirigimos a la misma página
+
+    else:
+        # Si se visita la página, mostramos los formularios con los datos actuales
+        u_form = UserUpdateForm(instance=request.user)
+        p_form = ProfileUpdateForm(instance=request.user.profile)
+
+    context = {
+        'u_form': u_form,
+        'p_form': p_form
+    }
+
+    return render(request, 'members/profile.html', context)
 
 def code_of_conduct(request):
     """

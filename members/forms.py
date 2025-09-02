@@ -38,3 +38,27 @@ class UserRegisterForm(forms.ModelForm):
             raise forms.ValidationError("Las contraseñas no coinciden.")
         
         return password_confirm
+
+class UserUpdateForm(forms.ModelForm):
+    """Formulario para actualizar datos del modelo User."""
+    email = forms.EmailField()
+
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'email']
+        labels = {
+            'first_name': 'Nombre',
+            'last_name': 'Apellido',
+            'email': 'Correo Electrónico',
+        }
+
+class ProfileUpdateForm(forms.ModelForm):
+    """Formulario para actualizar datos del modelo Profile."""
+    class Meta:
+        model = Profile
+        fields = ['dni', 'address', 'phone_number']
+        labels = {
+            'dni': 'DNI',
+            'address': 'Dirección',
+            'phone_number': 'Teléfono',
+        }

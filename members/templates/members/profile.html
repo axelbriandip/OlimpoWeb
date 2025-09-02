@@ -7,10 +7,10 @@
     <div class="col-md-3">
         <div class="card">
             <div class="card-header">
-                <strong>Hola, {{ user.first_name }}</strong>
+                <strong>Hola, {{ user.first_name|default:user.username }}</strong>
             </div>
             <div class="list-group list-group-flush">
-                <a href="#" class="list-group-item list-group-item-action active">Mis Datos</a>
+                <a href="{% url 'profile' %}" class="list-group-item list-group-item-action active">Mis Datos</a>
                 <a href="#" class="list-group-item list-group-item-action disabled">Estado de Cuenta (Próximamente)</a>
                 <form action="{% url 'logout' %}" method="post">
                     {% csrf_token %}
@@ -27,13 +27,20 @@
         <hr>
         <div class="card">
             <div class="card-body">
-                <p><strong>Nombre de Usuario:</strong> {{ user.username }}</p>
-                <p><strong>Nombre Completo:</strong> {{ user.first_name }} {{ user.last_name }}</p>
-                <p><strong>Email:</strong> {{ user.email }}</p>
-                <hr>
-                <p><strong>DNI:</strong> {{ user.profile.dni }}</p>
-                <p><strong>Dirección:</strong> {{ user.profile.address }}</p>
-                <p><strong>Teléfono:</strong> {{ user.profile.phone_number }}</p>
+                <form method="POST">
+                    {% csrf_token %}
+                    <fieldset class="form-group">
+                        <legend class="border-bottom mb-4">Información de la Cuenta</legend>
+                        {{ u_form.as_p }}
+                    </fieldset>
+                    <fieldset class="form-group mt-4">
+                        <legend class="border-bottom mb-4">Información Personal</legend>
+                        {{ p_form.as_p }}
+                    </fieldset>
+                    <div class="form-group mt-4">
+                        <button class="btn btn-primary" type="submit">Actualizar Datos</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
