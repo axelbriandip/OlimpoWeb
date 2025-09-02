@@ -43,7 +43,7 @@ def profile(request):
     """
     Gestiona la visualización, actualización de datos y subida de comprobantes.
     """
-        # Se asegura de que el perfil del usuario tenga un objeto de membresía asociado.
+    # Se asegura de que el perfil del usuario tenga un objeto de membresía asociado.
     # Si no existe, lo crea. Si ya existe, simplemente lo obtiene.
     Membership.objects.get_or_create(profile=request.user.profile)
 
@@ -81,11 +81,13 @@ def profile(request):
     u_form = UserUpdateForm(instance=request.user)
     p_form = ProfileUpdateForm(instance=request.user.profile)
     receipt_form = ReceiptUploadForm()
+    payment_history = request.user.profile.payments.all()[:5]
 
     context = {
         'u_form': u_form,
         'p_form': p_form,
-        'receipt_form': receipt_form
+        'receipt_form': receipt_form,
+        'payment_history': payment_history,
     }
 
     return render(request, 'members/profile.html', context)
