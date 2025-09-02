@@ -37,3 +37,27 @@ class Membership(models.Model):
 
     def __str__(self):
         return f"Membresía de {self.profile.user.username}"
+
+class Payment(models.Model):
+    """
+    Guarda el registro de un pago individual realizado por un socio.
+    """
+    # Vinculamos el pago al perfil del socio
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="payments")
+    
+    # El archivo del comprobante
+    receipt = models.ImageField("Comprobante de Pago", upload_to='receipts/')
+    
+    # Fecha en que el socio realizó el pago (la reporta él)
+    payment_date = models.DateField("Fecha de Pago", auto_now_add=True)
+    
+    # Fecha en que se subió el comprobante
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Pago Registrado"
+        verbose_name_plural = "Pagos Registrados"
+        ordering = ['-payment_date']
+
+    def __str__(self):
+        return f"Pago de {self.profile.user.username} el {self.payment_date}"

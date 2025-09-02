@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from .forms import UserRegisterForm
-from .models import Profile
+from .models import Profile, Membership
 from django.contrib.auth.decorators import login_required
-from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
+from .forms import UserUpdateForm, ProfileUpdateForm, ReceiptUploadForm, UserRegisterForm
+from datetime import date
+from dateutil.relativedelta import relativedelta
 
 def register(request):
     """
@@ -40,27 +41,51 @@ def register(request):
 @login_required
 def profile(request):
     """
-    Gestiona la visualización y actualización del perfil del socio.
+    Gestiona la visualización, actualización de datos y subida de comprobantes.
     """
-    if request.method == 'POST':
-        # Si se envía el formulario, procesamos los datos
-        u_form = UserUpdateForm(request.POST, instance=request.user)
-        p_form = ProfileUpdateForm(request.POST, instance=request.user.profile)
-        
-        if u_form.is_valid() and p_form.is_valid():
-            u_form.save()
-            p_form.save()
-            messages.success(request, '¡Tu perfil ha sido actualizado con éxito!')
-            return redirect('profile') # Redirigimos a la misma página
+        # Se asegura de que el perfil del usuario tenga un objeto de membresía asociado.
+    # Si no existe, lo crea. Si ya existe, simplemente lo obtiene.
+    Membership.objects.get_or_create(profile=request.user.profile)
 
-    else:
-        # Si se visita la página, mostramos los formularios con los datos actuales
-        u_form = UserUpdateForm(instance=request.user)
-        p_form = ProfileUpdateForm(instance=request.user.profile)
+    if request.method == 'POST':
+        # Verificamos qué formulario se está enviando
+        if 'update_profile' in request.POST:
+            u_form = UserUpdateForm(request.POST, instance=request.user)
+            p_form = ProfileUpdateForm(request.POST, instance=request.user.profile)
+            if u_form.is_valid() and p_form.is_valid():
+                u_form.save()
+                p_form.save()
+                messages.success(request, '¡Tus datos han sido actualizados!')
+                return redirect('profile')
+        
+        elif 'upload_receipt' in request.POST:
+            receipt_form = ReceiptUploadForm(request.POST, request.FILES)
+            if receipt_form.is_valid():
+                payment = receipt_form.save(commit=False)
+                payment.profile = request.user.profile
+                payment.save() # Al guardar, la fecha se añade sola
+
+                # --- LÓGICA DE ACTUALIZACIÓN AUTOMÁTICA ---
+                membership = request.user.profile.membership
+                
+                # Usamos la fecha que se guardó automáticamente en el objeto 'payment'
+                membership.status = 'ACT'
+                membership.last_payment_date = payment.payment_date
+                membership.next_due_date = payment.payment_date + relativedelta(months=+1)
+                membership.save()
+
+                messages.success(request, '¡Comprobante recibido! Tu estado de cuenta ha sido actualizado. Gracias por tu pago.')
+                return redirect('profile')
+
+    # Si se visita la página (GET), mostramos todos los formularios vacíos
+    u_form = UserUpdateForm(instance=request.user)
+    p_form = ProfileUpdateForm(instance=request.user.profile)
+    receipt_form = ReceiptUploadForm()
 
     context = {
         'u_form': u_form,
-        'p_form': p_form
+        'p_form': p_form,
+        'receipt_form': receipt_form
     }
 
     return render(request, 'members/profile.html', context)

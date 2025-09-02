@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import Profile
+from .models import Profile, Payment
 
 class UserRegisterForm(forms.ModelForm):
     """
@@ -61,4 +61,15 @@ class ProfileUpdateForm(forms.ModelForm):
             'dni': 'DNI',
             'address': 'Dirección',
             'phone_number': 'Teléfono',
+        }
+
+class ReceiptUploadForm(forms.ModelForm):
+    """
+    Formulario para que el socio suba su comprobante de pago.
+    """
+    class Meta:
+        model = Payment
+        fields = ['receipt']
+        labels = {
+            'receipt': 'Adjuntar comprobante (captura de pantalla o foto)',
         }

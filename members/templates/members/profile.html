@@ -50,16 +50,27 @@
             <div class="tab-pane fade" id="estado-cuenta" role="tabpanel">
                 <h2>Estado de Cuenta</h2>
                 <hr>
-                <div class="card">
+                <div class="card mb-4">
                     <div class="card-body">
-                        <p><strong>Estado de la cuota:</strong> 
-                            <span class="badge 
-                                {% if user.profile.membership.status == 'ACT' %}bg-success{% elif user.profile.membership.status == 'ATR' %}bg-danger{% else %}bg-secondary{% endif %}">
-                                {{ user.profile.membership.get_status_display }}
-                            </span>
-                        </p>
-                        <p><strong>Fecha del último pago:</strong> {{ user.profile.membership.last_payment_date|date:"d/m/Y"|default:"No registrado" }}</p>
-                        <p><strong>Próximo vencimiento:</strong> {{ user.profile.membership.next_due_date|date:"d/m/Y"|default:"No definido" }}</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <strong>Registrar un Nuevo Pago</strong>
+                    </div>
+                    <div class="card-body">
+                        <p>Para registrar tu pago, realiza una transferencia a nuestro CBU/Alias y luego sube el comprobante aquí.</p>
+                        <p><strong>CBU:</strong> 0000111122223333444455</p>
+                        <p><strong>Alias:</strong> OLIMPO.CLUB.RG</p>
+                        <hr>
+                        <form method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            {{ receipt_form.as_p }}
+                            <div class="d-grid mt-3">
+                                <button class="btn btn-primary" type="submit" name="upload_receipt">Enviar Comprobante</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
