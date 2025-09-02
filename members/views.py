@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from .forms import UserRegisterForm
 from .models import Profile
+from django.contrib.auth.decorators import login_required
 
 def register(request):
     """
@@ -34,3 +35,35 @@ def register(request):
         form = UserRegisterForm()
         
     return render(request, 'members/register.html', {'form': form})
+
+@login_required
+def profile(request):
+    """
+    Muestra la página de perfil del socio que ha iniciado sesión.
+    """
+    # El objeto 'request.user' siempre contiene al usuario que ha iniciado sesión
+    return render(request, 'members/profile.html')
+
+def code_of_conduct(request):
+    """
+    Muestra la página del Código de Conducta.
+    """
+    return render(request, 'members/code_of_conduct.html')
+
+def faq(request):
+    """
+    Muestra la página de Preguntas Frecuentes.
+    """
+    return render(request, 'members/faq.html')
+
+def benefits(request):
+    """
+    Muestra la página de beneficios para socios.
+    """
+    return render(request, 'members/benefits.html')
+
+def costs(request):
+    """
+    Muestra la página de costos y categorías de socios.
+    """
+    return render(request, 'members/costs.html')

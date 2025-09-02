@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}Costos y Categorías{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="text-center mb-5">
+        <h1>Costos y Categorías</h1>
+        <p class="lead text-muted">Encuentra el plan perfecto para vos y tu familia.</p>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover text-center">
+                    <thead class="table-dark">
+                        <tr>
+                            <th scope="col">Categoría de Socio</th>
+                            <th scope="col">Rango de Edad</th>
+                            <th scope="col">Valor de la Cuota Mensual</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Socio Infantil</td>
+                            <td>Menores de 12 años</td>
+                            <td>$ XXXX</td>
+                        </tr>
+                        <tr>
+                            <td>Socio Cadete</td>
+                            <td>De 12 a 17 años</td>
+                            <td>$ XXXX</td>
+                        </tr>
+                        <tr>
+                            <td>Socio Activo</td>
+                            <td>Mayores de 18 años</td>
+                            <td>$ XXXX</td>
+                        </tr>
+                        <tr>
+                            <td>Grupo Familiar</td>
+                            <td>Consultar en secretaría</td>
+                            <td>$ XXXX</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="text-center mt-4">
+                <a href="{% url 'register' %}" class="btn btn-primary btn-lg">Inscribirme Ahora</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

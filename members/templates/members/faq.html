@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}Preguntas Frecuentes{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="text-center mb-5">
+        <h1>Preguntas Frecuentes (FAQ)</h1>
+        <p class="lead text-muted">Resolvemos las dudas más comunes de nuestra comunidad.</p>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="accordion" id="faqAccordion">
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                            ¿Qué necesita mi hijo/a para inscribirse?
+                        </button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Para la inscripción se requiere: fotocopia del DNI, certificado de aptitud física y completar la ficha de inscripción en la secretaría del club.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo">
+                            ¿Cómo y dónde se paga la cuota social?
+                        </button>
+                    </h2>
+                    <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            La cuota se abona del 1 al 10 de cada mes en la secretaría del club. Próximamente habilitaremos el pago online.
+                        </div>
+                    </div>
+                </div>
+
+                </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

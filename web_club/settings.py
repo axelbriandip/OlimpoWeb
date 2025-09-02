@@ -139,3 +139,12 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
+
+# Redirección después de iniciar sesión
+LOGIN_REDIRECT_URL = '/'
+
+# Redirección después de cerrar sesión
+LOGOUT_REDIRECT_URL = '/'
+
+# Imprime los emails en la consola en lugar de enviarlos
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
