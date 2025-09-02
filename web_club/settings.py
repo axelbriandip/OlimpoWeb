@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'core',
     'sponsors',
     'gallery',
+    'members',
 ]
 
 MIDDLEWARE = [
