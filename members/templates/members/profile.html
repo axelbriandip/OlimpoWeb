@@ -9,9 +9,9 @@
             <div class="card-header">
                 <strong>Hola, {{ user.first_name|default:user.username }}</strong>
             </div>
-            <div class="list-group list-group-flush">
-                <a href="{% url 'profile' %}" class="list-group-item list-group-item-action active">Mis Datos</a>
-                <a href="#" class="list-group-item list-group-item-action disabled">Estado de Cuenta (Próximamente)</a>
+            <div class="list-group list-group-flush" id="profileTabs" role="tablist">
+                <a class="list-group-item list-group-item-action active" id="datos-tab" data-bs-toggle="list" href="#mis-datos" role="tab">Mis Datos</a>
+                <a class="list-group-item list-group-item-action" id="cuenta-tab" data-bs-toggle="list" href="#estado-cuenta" role="tab">Estado de Cuenta</a>
                 <form action="{% url 'logout' %}" method="post">
                     {% csrf_token %}
                     <button type="submit" class="list-group-item list-group-item-action text-danger w-100 text-start border-0 bg-transparent">
@@ -23,24 +23,45 @@
     </div>
 
     <div class="col-md-9">
-        <h2>Mis Datos</h2>
-        <hr>
-        <div class="card">
-            <div class="card-body">
-                <form method="POST">
-                    {% csrf_token %}
-                    <fieldset class="form-group">
-                        <legend class="border-bottom mb-4">Información de la Cuenta</legend>
-                        {{ u_form.as_p }}
-                    </fieldset>
-                    <fieldset class="form-group mt-4">
-                        <legend class="border-bottom mb-4">Información Personal</legend>
-                        {{ p_form.as_p }}
-                    </fieldset>
-                    <div class="form-group mt-4">
-                        <button class="btn btn-primary" type="submit">Actualizar Datos</button>
+        <div class="tab-content">
+            <div class="tab-pane fade show active" id="mis-datos" role="tabpanel">
+                <h2>Mis Datos</h2>
+                <hr>
+                <div class="card">
+                    <div class="card-body">
+                        <form method="POST">
+                            {% csrf_token %}
+                            <fieldset class="form-group">
+                                <legend class="border-bottom mb-4">Información de la Cuenta</legend>
+                                {{ u_form.as_p }}
+                            </fieldset>
+                            <fieldset class="form-group mt-4">
+                                <legend class="border-bottom mb-4">Información Personal</legend>
+                                {{ p_form.as_p }}
+                            </fieldset>
+                            <div class="form-group mt-4">
+                                <button class="btn btn-primary" type="submit">Actualizar Datos</button>
+                            </div>
+                        </form>
                     </div>
-                </form>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="estado-cuenta" role="tabpanel">
+                <h2>Estado de Cuenta</h2>
+                <hr>
+                <div class="card">
+                    <div class="card-body">
+                        <p><strong>Estado de la cuota:</strong> 
+                            <span class="badge 
+                                {% if user.profile.membership.status == 'ACT' %}bg-success{% elif user.profile.membership.status == 'ATR' %}bg-danger{% else %}bg-secondary{% endif %}">
+                                {{ user.profile.membership.get_status_display }}
+                            </span>
+                        </p>
+                        <p><strong>Fecha del último pago:</strong> {{ user.profile.membership.last_payment_date|date:"d/m/Y"|default:"No registrado" }}</p>
+                        <p><strong>Próximo vencimiento:</strong> {{ user.profile.membership.next_due_date|date:"d/m/Y"|default:"No definido" }}</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

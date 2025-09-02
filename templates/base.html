@@ -72,7 +72,7 @@
                 <ul class="dropdown-menu dropdown-menu-end">
                     <li><h6 class="dropdown-header">Mi Cuenta</h6></li>
                     <li><a class="dropdown-item" href="{% url 'profile' %}">Mi Perfil</a></li>
-                    <li><a class="dropdown-item disabled" href="#">Estado de Cuenta</a></li>
+                    <li><a class="dropdown-item" href="{% url 'profile' %}#estado-cuenta">Estado de Cuenta</a></li>
                     <li><hr class="dropdown-divider"></li>
 
                     <li><h6 class="dropdown-header">Información del Club</h6></li>
@@ -192,6 +192,22 @@
           modalImage.src = imgSrc;
           downloadButton.href = imgSrc;
         });
+      }
+    });
+  </script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Revisa si la URL tiene un # al final
+      const hash = window.location.hash;
+      if (hash) {
+        // Busca el botón de la pestaña que corresponde a ese #
+        const tabTrigger = document.querySelector(`a[data-bs-toggle="list"][href="${hash}"]`);
+        if (tabTrigger) {
+          // Usa la función de Bootstrap para "hacer clic" en esa pestaña y mostrarla
+          const tab = new bootstrap.Tab(tabTrigger);
+          tab.show();
+        }
       }
     });
   </script>
