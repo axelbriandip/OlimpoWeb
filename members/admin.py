@@ -3,18 +3,20 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User
 from .models import Profile, Membership
 
-# --- AÑADE ESTA NUEVA CLASE ---
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ('user', 'dni', 'phone_number')
-    # Habilitamos la búsqueda para que el autocomplete en Membership funcione
+    list_display = ('user', 'member_type', 'dni')
+    list_filter = ('member_type',) # Permite filtrar por tipo de socio
     search_fields = ('user__username', 'user__first_name', 'user__last_name', 'dni')
+    # Usamos un widget más cómodo para la selección de Vínculos
+    filter_horizontal = ('linked_profiles',)
 
-# 1. El inline para Profile se mantiene igual
 class ProfileInline(admin.StackedInline):
     model = Profile
     can_delete = False
     verbose_name_plural = 'Perfiles'
+    # Hacemos que el campo de Vínculos sea más usable aquí también
+    filter_horizontal = ('linked_profiles',)
 
 # 2. El UserAdmin vuelve a tener solo el ProfileInline
 class UserAdmin(BaseUserAdmin):

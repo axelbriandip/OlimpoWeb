@@ -5,14 +5,32 @@ class Profile(models.Model):
     """
     Este modelo extiende el modelo User de Django para añadir campos adicionales.
     """
-    # Relación uno a uno: cada Usuario tiene un solo Perfil.
+    class MemberType(models.TextChoices):
+        JUGADOR = 'JUG', 'Socio Jugador'
+        PADRE_TUTOR = 'PAD', 'Socio Padre/Tutor'
+        DIRIGENTE = 'DIR', 'Socio Dirigente'
+        ADHERENTE = 'ADH', 'Socio Adherente'
+
+    # Relación uno a uno con el usuario
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     
     # Campos adicionales del socio
     dni = models.CharField("DNI", max_length=20, blank=True)
     address = models.CharField("Dirección", max_length=255, blank=True)
     phone_number = models.CharField("Teléfono", max_length=50, blank=True)
-    # Aquí puedes añadir más campos en el futuro, como 'fecha de inscripción', etc.
+
+    # --- CAMPOS NUEVOS ---
+    member_type = models.CharField(
+        "Tipo de Socio",
+        max_length=3,
+        choices=MemberType.choices,
+        default=MemberType.ADHERENTE
+    )
+    linked_profiles = models.ManyToManyField(
+        'self',
+        blank=True,
+        verbose_name="Vínculos (ej: hijos a cargo)"
+    )
 
     def __str__(self):
         return f'Perfil de {self.user.username}'
