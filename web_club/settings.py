@@ -38,13 +38,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'players',
     'news',
     'fixtures',
     'core',
     'sponsors',
     'gallery',
     'members',
+    'billing',
 ]
 
 MIDDLEWARE = [

@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Nuestro Plantel{% endblock %}
+
+{% block content %}
+<div class="text-center mb-5">
+    <h1>Nuestro Plantel</h1>
+    <p class="lead text-muted">Conocé a quienes defienden nuestros colores en la lista de buena fe.</p>
+</div>
+
+{% for function_name, roles_in_function in grouped_roles.items %}
+    <div class="position-group mb-5">
+        <h2 class="position-title">{{ function_name }}</h2>
+        <hr class="mb-4">
+        <div class="row">
+            {% for role in roles_in_function %}
+                <div class="col-lg-3 col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm player-card">
+                        <div class="player-card-img-wrapper">
+                            {% if role.profile.profile_photo %}
+                                <img src="{{ role.profile.profile_photo.url }}" class="card-img-top" alt="Foto de {{ role.profile.user.get_full_name }}">
+                            {% else %}
+                                <div class="d-flex align-items-center justify-content-center h-100">
+                                    <small class="text-muted">Sin Foto</small>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">{{ role.profile.user.get_full_name }}</h5>
+                            <p class="card-text text-muted">{{ role.specific_position }}</p>
+                            {% if role.category %}
+                                <span class="badge bg-primary align-self-start mb-3">{{ role.category.name }}</span>
+                            {% endif %}
+                            <a href="{% url 'player_detail' role.profile.pk %}" class="btn btn-primary mt-auto">Ver Ficha</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% empty %}
+    <p class="text-center mt-5">No hay jugadores o cuerpo técnico en la lista oficial en este momento.</p>
+{% endfor %}
+{% endblock %}

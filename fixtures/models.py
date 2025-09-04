@@ -1,5 +1,5 @@
 from django.db import models
-from players.models import Category # Importamos el modelo Category de nuestra app 'players'
+from members.models import Category
 
 class Team(models.Model):
     """Representa un equipo de fútbol, ya sea el nuestro o un rival."""

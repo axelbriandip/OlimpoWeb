@@ -1,81 +1,86 @@
+# members/models.py
 from django.db import models
 from django.contrib.auth.models import User
 
-class Profile(models.Model):
-    """
-    Este modelo extiende el modelo User de Django para añadir campos adicionales.
-    """
-    class MemberType(models.TextChoices):
-        JUGADOR = 'JUG', 'Socio Jugador'
-        PADRE_TUTOR = 'PAD', 'Socio Padre/Tutor'
-        DIRIGENTE = 'DIR', 'Socio Dirigente'
-        ADHERENTE = 'ADH', 'Socio Adherente'
-
-    # Relación uno a uno con el usuario
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+class Category(models.Model):
+    """Representa una categoría del club, ej: 'Sub-15', 'Primera'."""
+    name = models.CharField("Nombre", max_length=100, unique=True)
+    order = models.PositiveIntegerField("Orden", default=0, help_text="Menor número aparece primero")
     
-    # Campos adicionales del socio
+    class Meta:
+        verbose_name = "Categoría"
+        verbose_name_plural = "Categorías"
+        ordering = ['order', 'name']
+
+    def __str__(self):
+        return self.name
+
+class MemberType(models.Model):
+    """ Tipos de Socio (ej: Jugador, Adherente), gestionable desde el admin. """
+    name = models.CharField("Nombre del Tipo de Socio", max_length=100, unique=True)
+    
+    class Meta:
+        verbose_name = "Tipo de Socio"
+        verbose_name_plural = "Tipos de Socio"
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name
+
+class Role(models.Model):
+    """ Un rol específico que una persona puede tener (ej: Delantero en Primera). """
+    class Function(models.TextChoices):
+        JUGADOR = 'JUG', 'Jugador'
+        STAFF = 'STA', 'Cuerpo Técnico'
+        DIRIGENTE = 'DIR', 'Dirigente'
+
+    profile = models.ForeignKey('Profile', on_delete=models.CASCADE, related_name='roles')
+    function = models.CharField("Función", max_length=3, choices=Function.choices)
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Categoría (si aplica)")
+    specific_position = models.CharField("Cargo Específico", max_length=100, help_text="Ej: Delantero, Tesorero, Director Técnico")
+    
+    class Meta:
+        verbose_name = "Rol"
+        verbose_name_plural = "Roles"
+
+    def __str__(self):
+        return f"{self.profile.user.username} - {self.get_function_display()}: {self.specific_position}"
+
+# 1. FUNCIÓN PARA EL NÚMERO DE SOCIO AUTOMÁTICO
+def get_next_member_id():
+    """
+    Busca el número de socio más alto y devuelve el siguiente.
+    Si no hay socios, empieza en 1.
+    """
+    last_profile = Profile.objects.order_by('-member_id').first()
+    if last_profile and last_profile.member_id:
+        return last_profile.member_id + 1
+    return 1
+
+class Profile(models.Model):
+    """ El Perfil Único que centraliza toda la información de una persona. """
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+# 1. NÚMERO DE SOCIO AUTOMÁTICO
+    member_id = models.PositiveIntegerField(
+        "Número de Socio", 
+        unique=True, 
+        default=get_next_member_id, 
+        editable=False # Hacemos que no se pueda editar desde el admin
+    )
+    date_of_birth = models.DateField("Fecha de Nacimiento", null=True, blank=True)
     dni = models.CharField("DNI", max_length=20, blank=True)
     address = models.CharField("Dirección", max_length=255, blank=True)
     phone_number = models.CharField("Teléfono", max_length=50, blank=True)
-
-    # --- CAMPOS NUEVOS ---
-    member_type = models.CharField(
-        "Tipo de Socio",
-        max_length=3,
-        choices=MemberType.choices,
-        default=MemberType.ADHERENTE
-    )
-    linked_profiles = models.ManyToManyField(
-        'self',
-        blank=True,
-        verbose_name="Vínculos (ej: hijos a cargo)"
-    )
-
+    
+    profile_photo = models.ImageField("Foto de Perfil", upload_to='profile_photos/', blank=True, null=True)
+    extra_photo_1 = models.ImageField("Foto Extra 1 (opcional)", upload_to='extra_photos/', blank=True, null=True)
+    extra_photo_2 = models.ImageField("Foto Extra 2 (opcional)", upload_to='extra_photos/', blank=True, null=True)
+    dni_photo_front = models.ImageField("Foto DNI (Frente)", upload_to='dni_photos/', blank=True, null=True)
+    dni_photo_back = models.ImageField("Foto DNI (Dorso)", upload_to='dni_photos/', blank=True, null=True)
+    
+    member_type = models.ForeignKey(MemberType, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Tipo de Socio")
+    is_on_roster = models.BooleanField("En Lista Oficial (para jugadores)", default=False)
+    is_exempt = models.BooleanField("Cuota Bonificada", default=False)
+    
     def __str__(self):
         return f'Perfil de {self.user.username}'
-
-class Membership(models.Model):
-    """
-    Guarda el estado de la membresía y los pagos de un socio.
-    """
-    class Status(models.TextChoices):
-        ACTIVO = 'ACT', 'Activo (Cuota al día)'
-        ATRASADO = 'ATR', 'Atrasado'
-        INACTIVO = 'INA', 'Inactivo'
-
-    profile = models.OneToOneField(Profile, on_delete=models.CASCADE, verbose_name="Perfil del Socio")
-    status = models.CharField("Estado de la Cuota", max_length=3, choices=Status.choices, default=Status.ACTIVO)
-    last_payment_date = models.DateField("Fecha del Último Pago", null=True, blank=True)
-    next_due_date = models.DateField("Fecha del Próximo Vencimiento", null=True, blank=True)
-
-    class Meta:
-        verbose_name = "Estado de Membresía"
-        verbose_name_plural = "Estados de Membresías"
-
-    def __str__(self):
-        return f"Membresía de {self.profile.user.username}"
-
-class Payment(models.Model):
-    """
-    Guarda el registro de un pago individual realizado por un socio.
-    """
-    # Vinculamos el pago al perfil del socio
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="payments")
-    
-    # El archivo del comprobante
-    receipt = models.ImageField("Comprobante de Pago", upload_to='receipts/')
-    
-    # Fecha en que el socio realizó el pago (la reporta él)
-    payment_date = models.DateField("Fecha de Pago", auto_now_add=True)
-    
-    # Fecha en que se subió el comprobante
-    uploaded_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        verbose_name = "Pago Registrado"
-        verbose_name_plural = "Pagos Registrados"
-        ordering = ['-payment_date']
-
-    def __str__(self):
-        return f"Pago de {self.profile.user.username} el {self.payment_date}"

@@ -1,75 +1,41 @@
 from django import forms
+
+class MembershipApplicationForm(forms.Form):
+    """Formulario para que un aspirante a socio envíe sus datos."""
+    first_name = forms.CharField(label="Nombre")
+    last_name = forms.CharField(label="Apellido")
+    email = forms.EmailField(label="Correo Electrónico")
+    phone_number = forms.CharField(label="Teléfono de Contacto")
+    date_of_birth = forms.DateField(
+        label="Fecha de Nacimiento",
+        widget=forms.DateInput(attrs={'type': 'date'}),
+        required=False
+    )
+    comments = forms.CharField(
+        label="Comentarios (ej: categoría de interés)", 
+        widget=forms.Textarea, 
+        required=False
+    )
+
+# --- Formularios para el Perfil del Socio ---
 from django.contrib.auth.models import User
-from .models import Profile, Payment
-
-class UserRegisterForm(forms.ModelForm):
-    """
-    Formulario para el registro de nuevos usuarios (socios).
-    """
-    # --- Campos para el modelo User ---
-    # Hacemos que la contraseña use un widget de tipo password
-    password = forms.CharField(widget=forms.PasswordInput, label="Contraseña")
-    password_confirm = forms.CharField(widget=forms.PasswordInput, label="Confirmar Contraseña")
-
-    # --- Campos para el modelo Profile ---
-    dni = forms.CharField(max_length=20, label="DNI")
-    address = forms.CharField(max_length=255, label="Dirección")
-    phone_number = forms.CharField(max_length=50, label="Teléfono")
-
-    class Meta:
-        model = User
-        # Campos del modelo User que queremos en el formulario
-        fields = ['first_name', 'last_name', 'email', 'username']
-        labels = {
-            'first_name': 'Nombre',
-            'last_name': 'Apellido',
-            'email': 'Correo Electrónico',
-            'username': 'Nombre de Usuario',
-        }
-
-    def clean_password_confirm(self):
-        """
-        Validación para asegurar que las dos contraseñas coincidan.
-        """
-        password = self.cleaned_data.get('password')
-        password_confirm = self.cleaned_data.get('password_confirm')
-
-        if password and password_confirm and password != password_confirm:
-            raise forms.ValidationError("Las contraseñas no coinciden.")
-        
-        return password_confirm
+from .models import Profile
 
 class UserUpdateForm(forms.ModelForm):
-    """Formulario para actualizar datos del modelo User."""
-    email = forms.EmailField()
-
+    """Formulario para actualizar datos básicos del User."""
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'email']
-        labels = {
-            'first_name': 'Nombre',
-            'last_name': 'Apellido',
-            'email': 'Correo Electrónico',
-        }
+        labels = { 'first_name': 'Nombre', 'last_name': 'Apellido', 'email': 'Correo Electrónico' }
 
 class ProfileUpdateForm(forms.ModelForm):
-    """Formulario para actualizar datos del modelo Profile."""
+    """Formulario para actualizar datos del Profile."""
     class Meta:
         model = Profile
-        fields = ['dni', 'address', 'phone_number']
-        labels = {
-            'dni': 'DNI',
-            'address': 'Dirección',
+        fields = ['dni', 'address', 'phone_number', 'profile_photo']
+        labels = { 
+            'dni': 'DNI', 
+            'address': 'Dirección', 
             'phone_number': 'Teléfono',
-        }
-
-class ReceiptUploadForm(forms.ModelForm):
-    """
-    Formulario para que el socio suba su comprobante de pago.
-    """
-    class Meta:
-        model = Payment
-        fields = ['receipt']
-        labels = {
-            'receipt': 'Adjuntar comprobante (captura de pantalla o foto)',
+            'profile_photo': 'Foto de Perfil',
         }
