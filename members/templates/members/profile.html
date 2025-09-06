@@ -4,6 +4,7 @@
 
 {% block content %}
 <div class="row">
+    <!-- Columna de Navegación -->
     <div class="col-md-3">
         <div class="card">
             <div class="card-header"><strong>Hola, {{ user.first_name|default:user.username }}</strong></div>
@@ -18,8 +19,10 @@
         </div>
     </div>
 
+    <!-- Columna de Contenido -->
     <div class="col-md-9">
         <div class="tab-content">
+            <!-- Pestaña 1: Estado de Cuenta -->
             <div class="tab-pane fade show active" id="estado-cuenta" role="tabpanel">
                 <h2>Estado de Cuenta</h2>
                 <hr>
@@ -52,6 +55,7 @@
                 </div>
             </div>
 
+            <!-- Pestaña 2: Mis Datos -->
             <div class="tab-pane fade" id="mis-datos" role="tabpanel">
                 <h2>Mis Datos</h2>
                 <hr>
@@ -59,10 +63,11 @@
                     <div class="card-body">
                         <form method="POST" action="{% url 'profile' %}" enctype="multipart/form-data">
                             {% csrf_token %}
-                            <input type="hidden" name="update_profile" value="1">
                             <fieldset class="form-group"><legend class="border-bottom mb-4">Información de la Cuenta</legend>{{ u_form.as_p }}</fieldset>
                             <fieldset class="form-group mt-4"><legend class="border-bottom mb-4">Información Personal</legend>{{ p_form.as_p }}</fieldset>
-                            <div class="form-group mt-4"><button class="btn btn-primary" type="submit">Actualizar Datos</button></div>
+                            <div class="form-group mt-4">
+                                <button class="btn btn-primary" type="submit" name="update_profile">Actualizar Datos</button>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -71,6 +76,7 @@
     </div>
 </div>
 
+<!-- Modal para Subir Comprobante -->
 <div class="modal fade" id="paymentModal" tabindex="-1">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
@@ -97,11 +103,19 @@ document.addEventListener('DOMContentLoaded', function() {
     const paymentModal = document.getElementById('paymentModal');
     if (paymentModal) {
         paymentModal.addEventListener('show.bs.modal', function (event) {
+            // Botón que activó el modal
             const button = event.relatedTarget;
+            // Extraemos los datos de los atributos data-*
             const invoiceId = button.getAttribute('data-invoice-id');
             const invoiceItem = button.getAttribute('data-invoice-item');
-            paymentModal.querySelector('#modalInvoiceId').value = invoiceId;
-            paymentModal.querySelector('#modalInvoiceItem').textContent = invoiceItem;
+
+            // Seleccionamos los elementos dentro del modal para actualizarlos
+            const modalInvoiceIdInput = paymentModal.querySelector('#modalInvoiceId');
+            const modalInvoiceItemSpan = paymentModal.querySelector('#modalInvoiceItem');
+
+            // Actualizamos los valores
+            modalInvoiceIdInput.value = invoiceId;
+            modalInvoiceItemSpan.textContent = invoiceItem;
         });
     }
 });

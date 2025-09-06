@@ -6,6 +6,7 @@ from .models import BoardMember, TimelineEvent, Testimonial
 from gallery.models import  Album
 from django.utils import timezone
 from collections import OrderedDict
+from members.models import Profile, Role
 
 def home(request):
     # Vista para la página de inicio.
@@ -28,26 +29,21 @@ def history(request):
     return render(request, 'core/history.html')
 
 def board_of_directors(request):
-    members = BoardMember.objects.all()
+    """
+    Muestra a los miembros de la Comisión Directiva, buscando perfiles
+    que tengan un rol de tipo 'Dirigente'.
+    """
+    # Buscamos todos los roles que sean de la función 'Dirigente'
+    board_roles = Role.objects.filter(function='DIR').order_by('profile__member_id')
     
-    # Creamos un diccionario para agrupar los miembros
-    grouped_members = OrderedDict()
-    
-    # Definimos el orden en que queremos que aparezcan los grupos
-    group_order = ['Mesa Directiva', 'Vocales', 'Comisión Fiscalizadora']
-    sponsors = Sponsor.objects.all()
+    # (Opcional) Si quisieras agruparlos por cargo (Presidente, Tesorero, etc.)
+    # podrías añadir una lógica de agrupación aquí, pero por ahora los mostramos todos juntos.
 
-    for group in group_order:
-        # Filtramos los miembros para cada grupo
-        members_in_group = [m for m in members if m.group == group]
-        if members_in_group:
-            grouped_members[group] = members_in_group
-            
     context = {
-        'grouped_members': grouped_members,
-        'sponsors': sponsors,
+        'board_roles': board_roles,
     }
     return render(request, 'core/board_of_directors.html', context)
+
 
 def history(request):
     """

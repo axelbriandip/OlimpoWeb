@@ -2,6 +2,18 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+class SpecificPosition(models.Model):
+    """Cargos específicos que se pueden asignar (ej: Delantero, Tesorero)."""
+    name = models.CharField("Nombre del Cargo", max_length=100, unique=True)
+
+    class Meta:
+        verbose_name = "Cargo Específico"
+        verbose_name_plural = "Cargos Específicos"
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name
+
 class Category(models.Model):
     """Representa una categoría del club, ej: 'Sub-15', 'Primera'."""
     name = models.CharField("Nombre", max_length=100, unique=True)
@@ -39,6 +51,12 @@ class Role(models.Model):
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Categoría (si aplica)")
     specific_position = models.CharField("Cargo Específico", max_length=100, help_text="Ej: Delantero, Tesorero, Director Técnico")
     
+    specific_position = models.ForeignKey(
+        SpecificPosition, 
+        on_delete=models.PROTECT,
+        verbose_name="Cargo Específico"
+    )
+
     class Meta:
         verbose_name = "Rol"
         verbose_name_plural = "Roles"

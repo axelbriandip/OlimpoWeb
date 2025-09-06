@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User
-from .models import Profile, MemberType, Role, Category
+from .models import Profile, MemberType, Role, Category, SpecificPosition
 
 # --- Inlines para una gestión más cómoda ---
 
@@ -11,11 +11,15 @@ class CategoryAdmin(admin.ModelAdmin):
     list_editable = ('order',)
     search_fields = ('name',)
 
+@admin.register(SpecificPosition)
+class SpecificPositionAdmin(admin.ModelAdmin):
+    search_fields = ('name',)
+
 class RoleInline(admin.TabularInline):
-    """Permite añadir/editar roles directamente desde la página del Perfil."""
     model = Role
-    extra = 1 # Muestra un campo para un nuevo rol por defecto.
-    autocomplete_fields = ('category',)
+    extra = 1
+    # Usamos autocomplete para que sea fácil buscar y seleccionar los cargos
+    autocomplete_fields = ('category', 'specific_position') 
 
 class ProfileInline(admin.StackedInline):
     """Muestra el Perfil dentro de la página de edición del Usuario."""

@@ -6,4 +6,5 @@ class MembersConfig(AppConfig):
 
     # Añade este método
     def ready(self):
-        import members.signals
+        # import members.signals
+        pass

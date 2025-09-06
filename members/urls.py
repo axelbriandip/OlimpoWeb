@@ -19,6 +19,25 @@ urlpatterns = [
     path('code-of-conduct/', views.code_of_conduct, name='code_of_conduct'),
     path('faq/', views.faq, name='faq'),
     
-    # URLs de Reseteo de Contraseña
-    # (Añade aquí las 4 URLs de password_reset si las vas a usar)
+    # --- RUTAS PARA RESETEO DE CONTRASEÑA (ASEGÚRATE DE QUE ESTÉN AQUÍ) ---
+    path(
+        'password-reset/', 
+        auth_views.PasswordResetView.as_view(template_name='members/registration/password_reset_form.html'), 
+        name='password_reset'
+    ),
+    path(
+        'password-reset/done/', 
+        auth_views.PasswordResetDoneView.as_view(template_name='members/registration/password_reset_done.html'), 
+        name='password_reset_done'
+    ),
+    path(
+        'password-reset-confirm/<uidb64>/<token>/', 
+        auth_views.PasswordResetConfirmView.as_view(template_name='members/registration/password_reset_confirm.html'), 
+        name='password_reset_confirm'
+    ),
+    path(
+        'password-reset-complete/', 
+        auth_views.PasswordResetCompleteView.as_view(template_name='members/registration/password_reset_complete.html'), 
+        name='password_reset_complete'
+    ),
 ]
