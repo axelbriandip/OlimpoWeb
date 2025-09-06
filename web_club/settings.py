@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'gallery',
     'members',
     'billing',
+    'dashboard',
 ]
 
 MIDDLEWARE = [

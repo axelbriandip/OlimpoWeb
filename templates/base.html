@@ -72,7 +72,11 @@
                 <ul class="dropdown-menu dropdown-menu-end">
                     <li><h6 class="dropdown-header">Mi Cuenta</h6></li>
                     <li><a class="dropdown-item" href="{% url 'profile' %}">Mi Perfil</a></li>
-                    <li><a class="dropdown-item" href="{% url 'profile' %}#estado-cuenta">Estado de Cuenta</a></li>
+                    {% if user.is_superuser %}
+                      <li><a class="dropdown-item" href="{% url 'dashboard_home' %}">Panel de Admin</a></li>
+                    {% else %}
+                      <li><a class="dropdown-item" href="{% url 'profile' %}#estado-cuenta">Estado de Cuenta</a></li>
+                    {% endif %}
                     <li><hr class="dropdown-divider"></li>
 
                     <li><h6 class="dropdown-header">Información del Club</h6></li>

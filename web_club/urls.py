@@ -12,6 +12,7 @@ urlpatterns = [
     path('fixtures/', include('fixtures.urls')),
     path('gallery/', include('gallery.urls')),
     path('members/', include('members.urls')),
+    path('dashboard/', include('dashboard.urls')),
 ]
 
 # Esta línea es crucial para que se vean las fotos de los jugadores
