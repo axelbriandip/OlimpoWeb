@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<div class="container my-5">
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="card shadow-sm">
+            <div class="card-header"><h4 class="mb-0">{{ title }}</h4></div>
+            <div class="card-body">
+                <h5>Datos del Álbum</h5><hr>{{ form.as_p }}
+                <h5 class="mt-4">Fotos del Álbum</h5><hr>
+                
+                {{ formset.management_form }}
+                {% for form in formset %}
+                    <div class="photo-form mb-3 p-3 border rounded">
+                        {{ form.as_p }}
+                    </div>
+                {% endfor %}
+
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                    <a href="{% url 'dashboard_gallery_list' %}" class="btn btn-secondary">Cancelar</a>
+                    <button class="btn btn-primary" type="submit">Guardar Álbum</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

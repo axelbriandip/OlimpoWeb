@@ -12,6 +12,8 @@ from members.models import Profile, MemberType, Role, Category
 from billing.models import Invoice, BillableItem, Payment
 from members.forms import UserUpdateForm, ProfileAdminUpdateForm, RoleForm, MemberCreationForm
 from billing.forms import BillableItemForm
+from gallery.models import Album, Photo
+from gallery.forms import AlbumForm
 
 # --- Función de Verificación ---
 def is_superuser(user):
@@ -327,3 +329,53 @@ def news_delete_view(request, pk):
         return redirect('dashboard_news_list')
     context = {'article': article}
     return render(request, 'dashboard/news_confirm_delete.html', context)
+
+@user_passes_test(is_superuser)
+def gallery_list_view(request):
+    """Muestra una lista de todos los álbumes."""
+    albums = Album.objects.all()
+    context = {'albums': albums}
+    return render(request, 'dashboard/gallery_list.html', context)
+
+@user_passes_test(is_superuser)
+def gallery_update_view(request, pk=None):
+    """
+    Crea un nuevo álbum (si pk es None) o edita uno existente.
+    """
+    # Definimos el formset para manejar las fotos del álbum
+    PhotoFormSet = inlineformset_factory(Album, Photo, fields=('image', 'title'), extra=1, can_delete=True)
+
+    if pk: # Si es para editar, buscamos el álbum
+        album = get_object_or_404(Album, pk=pk)
+        title = "Editar Álbum"
+    else: # Si es para crear, creamos una instancia vacía
+        album = Album()
+        title = "Crear Nuevo Álbum"
+
+    if request.method == 'POST':
+        form = AlbumForm(request.POST, instance=album)
+        formset = PhotoFormSet(request.POST, request.FILES, instance=album)
+        
+        if form.is_valid() and formset.is_valid():
+            album = form.save()
+            formset.instance = album
+            formset.save()
+            messages.success(request, f"Álbum guardado con éxito.")
+            return redirect('dashboard_gallery_list')
+    else:
+        form = AlbumForm(instance=album)
+        formset = PhotoFormSet(instance=album)
+
+    context = {'form': form, 'formset': formset, 'title': title, 'album': album}
+    return render(request, 'dashboard/gallery_form.html', context)
+
+@user_passes_test(is_superuser)
+def gallery_delete_view(request, pk):
+    """Elimina un álbum y todas sus fotos."""
+    album = get_object_or_404(Album, pk=pk)
+    if request.method == 'POST':
+        album.delete()
+        messages.success(request, "Álbum eliminado con éxito.")
+        return redirect('dashboard_gallery_list')
+    context = {'album': album}
+    return render(request, 'dashboard/gallery_confirm_delete.html', context)

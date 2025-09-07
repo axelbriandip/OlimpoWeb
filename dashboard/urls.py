@@ -17,4 +17,9 @@ urlpatterns = [
     path('news/add/', views.news_create_view, name='dashboard_news_add'),
     path('news/<int:pk>/edit/', views.news_update_view, name='dashboard_news_update'),
     path('news/<int:pk>/delete/', views.news_delete_view, name='dashboard_news_delete'),
+    # --- NUEVAS RUTAS PARA GALERÍA ---
+    path('gallery/', views.gallery_list_view, name='dashboard_gallery_list'),
+    path('gallery/add/', views.gallery_update_view, name='dashboard_gallery_add'),
+    path('gallery/<int:pk>/edit/', views.gallery_update_view, name='dashboard_gallery_update'),
+    path('gallery/<int:pk>/delete/', views.gallery_delete_view, name='dashboard_gallery_delete'),
 ]
