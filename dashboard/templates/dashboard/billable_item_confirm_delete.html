@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Confirmar Eliminación{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h2 class="card-title text-center mb-4">Confirmar Eliminación</h2>
+                    <p class="text-center">¿Estás seguro de que quieres eliminar el ítem "<strong>{{ item.name }}</strong>"?</p>
+                    <p class="text-center text-danger">Esta acción no se puede deshacer.</p>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-center mt-4">
+                            <button class="btn btn-danger" type="submit">Sí, Eliminar</button>
+                            <a href="{% url 'dashboard_billing' %}" class="btn btn-secondary">Cancelar</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

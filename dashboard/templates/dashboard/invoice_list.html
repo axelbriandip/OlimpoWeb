@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}Registro de Facturas{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h1>Registro de Facturas</h1>
+    <p class="lead text-muted">Busca y filtra todos los cobros asignados en el club.</p>
+
+    <!-- Formulario de Filtros -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3 align-items-end">
+                <div class="col-md-6">
+                    <label for="q" class="form-label">Buscar Socio (Nombre, Apellido o DNI)</label>
+                    <input type="text" name="q" id="q" class="form-control" value="{{ search_query|default:'' }}">
+                </div>
+                <div class="col-md-4">
+                    <label for="status" class="form-label">Filtrar por Estado</label>
+                    <select name="status" id="status" class="form-select">
+                        <option value="">Todos los Estados</option>
+                        {% for value, label in all_statuses %}
+                            <option value="{{ value }}" {% if status_query == value %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2 d-grid">
+                    <button type="submit" class="btn btn-primary">Filtrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Tabla de Facturas -->
+    <div class="card shadow-sm">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover mb-0">
+                <thead><tr><th>Socio</th><th>Concepto</th><th>Monto</th><th>Vencimiento</th><th>Estado</th></tr></thead>
+                <tbody>
+                    {% for invoice in invoices %}
+                        <tr>
+                            <td>{{ invoice.profile.user.get_full_name }}</td>
+                            <td>{{ invoice.item.name }}</td>
+                            <td>${{ invoice.amount|floatformat:2 }}</td>
+                            <td>{{ invoice.due_date|date:"d/m/Y"|default:"-" }}</td>
+                            <td><span class="badge {% if invoice.status == 'PAG' %}bg-success{% elif invoice.status == 'PEN' %}bg-danger{% elif invoice.status == 'VER' %}bg-warning text-dark{% else %}bg-info text-dark{% endif %}">{{ invoice.get_status_display }}</span></td>
+                        </tr>
+                    {% empty %}
+                        <tr><td colspan="5" class="text-center text-muted">No se encontraron facturas con los filtros aplicados.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
