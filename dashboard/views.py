@@ -3,14 +3,20 @@ from django.contrib.auth.decorators import user_passes_test
 from django.contrib import messages
 from django.db.models import Q
 from django.urls import reverse
+from django.forms import inlineformset_factory
+from django.contrib.auth.models import User
 
-# Importamos todos los modelos y formularios necesarios
+# Importamos los modelos y formularios de las otras apps
 from members.models import Profile, MemberType, Role, Category
 from billing.models import Invoice, BillableItem, Payment
+from members.forms import UserUpdateForm, ProfileAdminUpdateForm, RoleForm, MemberCreationForm
 from billing.forms import BillableItemForm
 
+# --- Función de Verificación ---
 def is_superuser(user):
     return user.is_superuser
+
+# --- Vistas del Dashboard ---
 
 @user_passes_test(is_superuser)
 def dashboard_home(request):
@@ -18,15 +24,68 @@ def dashboard_home(request):
     Vista principal del Panel de Administración.
     """
     pending_payments_count = Invoice.objects.filter(status='VER').count()
-    context = {'pending_payments_count': pending_payments_count}
+    context = {
+        'pending_payments_count': pending_payments_count
+    }
     return render(request, 'dashboard/dashboard.html', context)
+
+# --- Vistas para la Gestión de Socios (CRUD) ---
+
+@user_passes_test(is_superuser)
+def member_create_view(request):
+    """
+    Vista para Crear un nuevo socio (User + Profile + Roles).
+    """
+    RoleFormSet = inlineformset_factory(Profile, Role, form=RoleForm, extra=1, can_delete=False)
+
+    if request.method == 'POST':
+        user_form = MemberCreationForm(request.POST)
+        profile_form = ProfileAdminUpdateForm(request.POST, request.FILES)
+        
+        # Primero, validamos los dos formularios principales
+        if user_form.is_valid() and profile_form.is_valid():
+            # 1. Creamos el User y hasheamos la contraseña
+            user = user_form.save(commit=False)
+            user.set_password(user_form.cleaned_data['password'])
+            user.save() # Al guardar, la señal (si está activa) se dispara y crea el Profile vacío.
+
+            # 2. Re-vinculamos el profile_form a la instancia recién creada y guardamos los datos del perfil
+            profile_form_instance = ProfileAdminUpdateForm(request.POST, request.FILES, instance=user.profile)
+            if profile_form_instance.is_valid():
+                profile_form_instance.save()
+
+                # 3. Vinculamos y guardamos los roles asociados al perfil
+                role_formset = RoleFormSet(request.POST, instance=user.profile)
+                if role_formset.is_valid():
+                    role_formset.save()
+                
+                messages.success(request, f"Socio {user.get_full_name()} creado con éxito.")
+                return redirect('dashboard_member_list')
+        
+        # Si los formularios principales no son válidos, preparamos un formset vacío para mostrar la página de nuevo con los errores
+        role_formset = RoleFormSet()
+            
+    else: # Si es un GET request
+        user_form = MemberCreationForm()
+        profile_form = ProfileAdminUpdateForm()
+        role_formset = RoleFormSet()
+
+    context = {
+        'user_form': user_form,
+        'profile_form': profile_form,
+        'role_formset': role_formset,
+        'title': 'Añadir Nuevo Socio'
+    }
+    return render(request, 'dashboard/member_form.html', context)
+
 
 @user_passes_test(is_superuser)
 def member_list_view(request):
     """
-    Muestra una lista de todos los socios con opciones de búsqueda y filtro.
+    Muestra una lista de todos los socios con opciones de búsqueda.
     """
     profiles = Profile.objects.select_related('user', 'member_type').all().order_by('member_id')
+    
     query = request.GET.get('q')
     if query:
         profiles = profiles.filter(
@@ -34,9 +93,62 @@ def member_list_view(request):
             Q(user__last_name__icontains=query) |
             Q(dni__icontains=query)
         ).distinct()
+
     context = {'profiles': profiles}
     return render(request, 'dashboard/member_list.html', context)
 
+@user_passes_test(is_superuser)
+def member_update_view(request, pk):
+    """
+    Vista para ver (Leer) y editar (Actualizar) un socio y sus roles.
+    """
+    profile = get_object_or_404(Profile, pk=pk)
+    user = profile.user
+    
+    RoleFormSet = inlineformset_factory(Profile, Role, form=RoleForm, extra=1, can_delete=True)
+
+    if request.method == 'POST':
+        user_form = UserUpdateForm(request.POST, instance=user)
+        profile_form = ProfileAdminUpdateForm(request.POST, request.FILES, instance=profile)
+        role_formset = RoleFormSet(request.POST, instance=profile)
+
+        if user_form.is_valid() and profile_form.is_valid() and role_formset.is_valid():
+            user_form.save()
+            profile_form.save()
+            role_formset.save()
+            messages.success(request, f"Perfil de {user.get_full_name()} actualizado con éxito.")
+            return redirect('dashboard_member_list')
+    else:
+        user_form = UserUpdateForm(instance=user)
+        profile_form = ProfileAdminUpdateForm(instance=profile)
+        role_formset = RoleFormSet(instance=profile)
+
+    context = {
+        'profile': profile,
+        'user_form': user_form,
+        'profile_form': profile_form,
+        'role_formset': role_formset,
+        'title': 'Editar Socio'
+    }
+    return render(request, 'dashboard/member_form.html', context)
+
+@user_passes_test(is_superuser)
+def member_delete_view(request, pk):
+    """
+    Vista para eliminar un socio (su Usuario y Perfil).
+    """
+    profile = get_object_or_404(Profile, pk=pk)
+    user_to_delete = profile.user
+    if request.method == 'POST':
+        user_to_delete.delete()
+        messages.success(request, f"El socio {user_to_delete.get_full_name()} ha sido eliminado.")
+        return redirect('dashboard_member_list')
+    
+    context = {'profile': profile}
+    return render(request, 'dashboard/member_confirm_delete.html', context)
+
+
+# --- Vistas para la Gestión de Facturación ---
 @user_passes_test(is_superuser)
 def billing_dashboard_view(request):
     """
@@ -47,7 +159,6 @@ def billing_dashboard_view(request):
         profile_ids = request.POST.getlist('profile_ids')
         item_id = request.POST.get('billable_item')
         due_date = request.POST.get('due_date')
-
         if not profile_ids:
             messages.warning(request, "Error: No seleccionaste ningún socio.")
         elif not item_id or not due_date:
@@ -69,7 +180,6 @@ def billing_dashboard_view(request):
                 messages.success(request, f"Se asignaron {count} facturas exitosamente.")
             except (BillableItem.DoesNotExist, ValueError):
                 messages.error(request, "Hubo un error con los datos.")
-        
         return redirect('dashboard_billing')
 
     # --- Datos para las Plantillas (cuando se carga la página) ---
@@ -77,7 +187,7 @@ def billing_dashboard_view(request):
     # Pestaña "Verificar Pagos"
     pending_payments = Invoice.objects.filter(status='VER').select_related('profile__user', 'item', 'payment')
     
-    # Pestaña "Asignar Cobros"
+    # Pestaña "Asignar Cobros" (con sus filtros)
     profiles = Profile.objects.select_related('user', 'member_type').all().order_by('member_id')
     selected_member_type_id = request.GET.get('member_type')
     selected_category_id = request.GET.get('category')
@@ -86,7 +196,7 @@ def billing_dashboard_view(request):
     if selected_category_id:
         profiles = profiles.filter(roles__category_id=selected_category_id).distinct()
 
-    # Pestaña "Registro de Facturas"
+    # Pestaña "Registro de Facturas" (con sus filtros)
     invoices = Invoice.objects.select_related('profile__user', 'item').prefetch_related('payment').all()
     search_query = request.GET.get('q_invoice')
     status_query = request.GET.get('status_invoice')

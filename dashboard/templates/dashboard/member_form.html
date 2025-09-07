@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<div class="container my-5">
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="row g-4">
+            <!-- Columna Izquierda: Datos Principales -->
+            <div class="col-lg-8">
+                <div class="card shadow-sm">
+                    <div class="card-header"><h4 class="mb-0">Ficha de {{ profile.user.get_full_name }} (Socio N°{{ profile.member_id }})</h4></div>
+                    <div class="card-body">
+                        <h5>Datos de la Cuenta</h5><hr>{{ user_form.as_p }}
+                        <h5 class="mt-4">Datos del Perfil</h5><hr>{{ profile_form.as_p }}
+                    </div>
+                </div>
+            </div>
+            <!-- Columna Derecha: Roles y Acciones -->
+            <div class="col-lg-4">
+                <div class="card shadow-sm">
+                    <div class="card-header"><h5 class="mb-0">Roles Asignados</h5></div>
+                    <div class="card-body">
+                        {{ role_formset.management_form }}
+                        {% for form in role_formset %}
+                            <div class="role-form mb-3 p-3 border rounded">
+                                {{ form.as_p }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="d-grid gap-2 mt-4">
+                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                    <a href="{% url 'dashboard_member_list' %}" class="btn btn-secondary">Cancelar</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

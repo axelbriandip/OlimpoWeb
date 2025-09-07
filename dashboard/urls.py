@@ -10,4 +10,7 @@ urlpatterns = [
     path('billing/items/new/', views.billable_item_create, name='billable_item_create'),
     path('billing/items/<int:pk>/edit/', views.billable_item_update, name='billable_item_update'),
     path('billing/items/<int:pk>/delete/', views.billable_item_delete, name='billable_item_delete'),
+    path('members/<int:pk>/edit/', views.member_update_view, name='dashboard_member_update'),
+    path('members/<int:pk>/delete/', views.member_delete_view, name='dashboard_member_delete'),
+    path('members/add/', views.member_create_view, name='dashboard_member_add'),
 ]

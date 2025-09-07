@@ -6,7 +6,7 @@
 <div class="container my-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1>Gestionar Socios</h1>
-        <a href="{% url 'admin:auth_user_add' %}" class="btn btn-primary">Añadir Nuevo Socio</a>
+        <a href="{% url 'dashboard_member_add' %}" class="btn btn-primary">Añadir Nuevo Socio</a>
     </div>
 
     <!-- Barra de Búsqueda -->
@@ -38,8 +38,10 @@
                             <td>{{ profile.member_type.name }}</td>
                             <td>{{ profile.dni }}</td>
                             <td>
-                                <!-- Enlace para editar el usuario en el /admin -->
-                                <a href="{% url 'admin:auth_user_change' profile.user.id %}" class="btn btn-sm btn-secondary" target="_blank">Editar</a>
+                                <!-- Botón Editar -->
+                                <a href="{% url 'dashboard_member_update' profile.pk %}" class="btn btn-sm btn-secondary">Editar</a>
+                                <!-- Botón Eliminar -->
+                                <a href="{% url 'dashboard_member_delete' profile.pk %}" class="btn btn-sm btn-danger">Eliminar</a>
                             </td>
                         </tr>
                     {% empty %}
