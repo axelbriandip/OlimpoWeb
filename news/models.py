@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from django.utils.text import slugify
 
 class NewsCategory(models.Model):
     """Representa una categoría para una noticia (ej: 'Resultados', 'Eventos')."""
@@ -24,7 +25,8 @@ class Article(models.Model):
     # --- Atributos Principales ---
     title = models.CharField("Título", max_length=200)
     subtitle = models.CharField("Subtítulo", max_length=200, blank=True)
-    slug = models.SlugField("Slug (URL)", max_length=200, unique=True)
+    # Hacemos que el slug pueda estar en blanco, ya que lo generaremos nosotros
+    slug = models.SlugField("Slug (URL)", max_length=200, unique=True, blank=True)
     category = models.ForeignKey(NewsCategory, on_delete=models.SET_NULL, null=True, verbose_name="Categoría")
     
     # --- Contenido ---
@@ -37,6 +39,22 @@ class Article(models.Model):
     created_on = models.DateTimeField("Fecha de Creación", auto_now_add=True)
     updated_on = models.DateTimeField("Última Actualización", auto_now=True)
     
+     # 2. AÑADIMOS EL MÉTODO save
+    def save(self, *args, **kwargs):
+        # Si el slug está vacío, lo generamos a partir del título
+        if not self.slug:
+            self.slug = slugify(self.title)
+        
+        # Nos aseguramos de que el slug sea único
+        # Si ya existe un artículo con el mismo slug, le añadimos un número
+        original_slug = self.slug
+        counter = 1
+        while Article.objects.filter(slug=self.slug).exclude(pk=self.pk).exists():
+            self.slug = f'{original_slug}-{counter}'
+            counter += 1
+
+        super().save(*args, **kwargs)
+
     class Meta:
         ordering = ['-created_on']
         verbose_name = "Noticia"

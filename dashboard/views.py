@@ -5,7 +5,8 @@ from django.db.models import Q
 from django.urls import reverse
 from django.forms import inlineformset_factory
 from django.contrib.auth.models import User
-
+from news.models import Article
+from news.forms import ArticleForm
 # Importamos los modelos y formularios de las otras apps
 from members.models import Profile, MemberType, Role, Category
 from billing.models import Invoice, BillableItem, Payment
@@ -284,3 +285,45 @@ def billable_item_delete(request, pk):
     context = {'item': item}
     return render(request, 'dashboard/billable_item_confirm_delete.html', context)
 
+@user_passes_test(is_superuser)
+def news_list_view(request):
+    articles = Article.objects.all()
+    context = {'articles': articles}
+    return render(request, 'dashboard/news_list.html', context)
+
+@user_passes_test(is_superuser)
+def news_create_view(request):
+    if request.method == 'POST':
+        form = ArticleForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Noticia creada con éxito.")
+            return redirect('dashboard_news_list')
+    else:
+        form = ArticleForm()
+    context = {'form': form, 'title': 'Crear Nueva Noticia'}
+    return render(request, 'dashboard/news_form.html', context)
+
+@user_passes_test(is_superuser)
+def news_update_view(request, pk):
+    article = get_object_or_404(Article, pk=pk)
+    if request.method == 'POST':
+        form = ArticleForm(request.POST, request.FILES, instance=article)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Noticia actualizada con éxito.")
+            return redirect('dashboard_news_list')
+    else:
+        form = ArticleForm(instance=article)
+    context = {'form': form, 'title': 'Editar Noticia'}
+    return render(request, 'dashboard/news_form.html', context)
+
+@user_passes_test(is_superuser)
+def news_delete_view(request, pk):
+    article = get_object_or_404(Article, pk=pk)
+    if request.method == 'POST':
+        article.delete()
+        messages.success(request, "Noticia eliminada con éxito.")
+        return redirect('dashboard_news_list')
+    context = {'article': article}
+    return render(request, 'dashboard/news_confirm_delete.html', context)

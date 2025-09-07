@@ -10,24 +10,62 @@
     </div>
 
     <div class="row g-4">
-        <!-- Tarjeta de Acceso a Socios -->
-        <div class="col-md-6">
+        <!-- Tarjeta de Socios -->
+        <div class="col-lg-4 col-md-6">
             <div class="card h-100 shadow-sm">
                 <div class="card-body">
                     <h5 class="card-title">Gestionar Socios</h5>
-                    <p class="card-text">Ver la lista completa de socios, buscar perfiles y editar su información.</p>
+                    <p class="card-text">Ver, crear, editar y eliminar perfiles de socios.</p>
                     <a href="{% url 'dashboard_member_list' %}" class="btn btn-primary">Ir a Socios</a>
                 </div>
             </div>
         </div>
         
-        <!-- Tarjeta de Acceso a Facturación -->
-        <div class="col-md-6">
+        <!-- Tarjeta de Facturación -->
+        <div class="col-lg-4 col-md-6">
             <div class="card h-100 shadow-sm">
                 <div class="card-body">
                     <h5 class="card-title">Gestionar Facturación</h5>
-                    <p class="card-text">Asignar nuevas cuotas, verificar comprobantes de pago y ver el estado de las cuentas.</p>
+                    <p class="card-text">Asignar cuotas, verificar pagos y ver el registro de facturas.</p>
                     <a href="{% url 'dashboard_billing' %}" class="btn btn-primary">Ir a Facturación</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- NUEVAS TARJETAS -->
+        <div class="col-lg-4 col-md-6">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Gestionar Noticias</h5>
+                    <p class="card-text">Crear, editar y publicar artículos en el sitio.</p>
+                    <a href="{% url 'dashboard_news_list' %}" class="btn btn-primary">Ir a Noticias</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Gestionar Galería</h5>
+                    <p class="card-text">Crear álbumes y subir fotos de partidos y eventos.</p>
+                    <a href="#" class="btn btn-primary disabled">Ir a Galería</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Gestionar Fixture</h5>
+                    <p class="card-text">Cargar partidos, actualizar resultados y destacar encuentros.</p>
+                    <a href="#" class="btn btn-primary disabled">Ir a Fixture</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Gestionar Historia</h5>
+                    <p class="card-text">Añadir o editar los hitos y subhitos de la línea de tiempo.</p>
+                    <a href="#" class="btn btn-primary disabled">Ir a Historia</a>
                 </div>
             </div>
         </div>
