@@ -16,7 +16,6 @@ class Team(models.Model):
 
 class Fixture(models.Model):
     """Representa un único partido del fixture."""
-    # --- Información del Partido ---
     home_team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="home_fixtures", verbose_name="Equipo Local")
     away_team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="away_fixtures", verbose_name="Equipo Visitante")
     
@@ -26,15 +25,19 @@ class Fixture(models.Model):
     match_datetime = models.DateTimeField("Fecha y Hora del Partido", null=True, blank=True)
     venue = models.CharField("Estadio o Lugar", max_length=150, blank=True)
     
-    # --- Información Adicional del Torneo ---
     league_name = models.CharField("Nombre de la Liga", max_length=150, blank=True)
     tournament_name = models.CharField("Nombre del Torneo", max_length=150, blank=True)
-    stage = models.CharField("Etapa del Torneo", max_length=100, blank=True) # Ej: "Fecha 1", "Semifinal"
+    stage = models.CharField("Etapa del Torneo", max_length=100, blank=True)
     
-    # Vinculamos el partido a una de las categorías de nuestro club
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="fixtures", verbose_name="Categoría del Club")
-
     display_order = models.PositiveIntegerField("Orden", default=0, help_text="Menor número aparece primero")
+    
+    # --- ESTE ES EL CAMPO QUE FALTABA ---
+    is_featured = models.BooleanField(
+        "Destacado en Inicio", 
+        default=False,
+        help_text="Marcar para que este partido aparezca en la página de inicio."
+    )
 
     class Meta:
         verbose_name = "Partido"
@@ -42,8 +45,5 @@ class Fixture(models.Model):
         ordering = ['display_order', 'match_datetime']
 
     def __str__(self):
-        # Primero, verificamos si hay una fecha y creamos el texto correspondiente
         date_str = self.match_datetime.strftime('%d/%m/%Y') if self.match_datetime else 'Fecha a definir'
-        
-        # Luego, construimos la cadena de texto final
         return f"{self.home_team} vs {self.away_team} ({self.category.name}) - {date_str}"

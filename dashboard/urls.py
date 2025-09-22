@@ -27,4 +27,13 @@ urlpatterns = [
     path('history/add/', views.history_update_view, name='dashboard_history_add'),
     path('history/<int:pk>/edit/', views.history_update_view, name='dashboard_history_update'),
     path('history/<int:pk>/delete/', views.history_delete_view, name='dashboard_history_delete'),
+    # --- NUEVAS RUTAS PARA FIXTURE ---
+    path('fixtures/', views.fixture_list_view, name='dashboard_fixture_list'),
+    path('fixtures/add/', views.fixture_update_view, name='dashboard_fixture_add'),
+    path('fixtures/<int:pk>/edit/', views.fixture_update_view, name='dashboard_fixture_update'),
+    path('fixtures/<int:pk>/delete/', views.fixture_delete_view, name='dashboard_fixture_delete'),
+    # --- NUEVAS RUTAS PARA EQUIPOS ---
+    path('teams/add/', views.team_update_view, name='dashboard_team_add'),
+    path('teams/<int:pk>/edit/', views.team_update_view, name='dashboard_team_update'),
+    path('teams/<int:pk>/delete/', views.team_delete_view, name='dashboard_team_delete'),
 ]

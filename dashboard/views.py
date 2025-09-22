@@ -16,6 +16,8 @@ from gallery.models import Album, Photo
 from gallery.forms import AlbumForm
 from core.models import TimelineEvent
 from core.forms import TimelineEventForm
+from fixtures.models import Fixture, Team
+from fixtures.forms import FixtureForm, TeamForm
 
 # --- Función de Verificación ---
 def is_superuser(user):
@@ -386,9 +388,7 @@ def gallery_delete_view(request, pk):
 
 @user_passes_test(is_superuser)
 def history_list_view(request):
-    """
-    Muestra una lista de todos los hitos principales y sus sub-hitos.
-    """
+    """Muestra una lista de todos los hitos principales y sus sub-hitos."""
     # Usamos prefetch_related para cargar los sub-hitos de forma eficiente
     main_events = TimelineEvent.objects.filter(parent__isnull=True).prefetch_related('sub_events')
     context = {'main_events': main_events}
@@ -396,9 +396,7 @@ def history_list_view(request):
 
 @user_passes_test(is_superuser)
 def history_update_view(request, pk=None):
-    """
-    Crea un nuevo Hito/Sub-Hito o edita uno existente.
-    """
+    """Crea un nuevo Hito/Sub-Hito o edita uno existente."""
     if pk:
         instance = get_object_or_404(TimelineEvent, pk=pk)
         title = "Editar Hito"
@@ -420,9 +418,7 @@ def history_update_view(request, pk=None):
 
 @user_passes_test(is_superuser)
 def history_delete_view(request, pk):
-    """
-    Elimina un Hito y todos sus sub-hitos asociados.
-    """
+    """Elimina un Hito y todos sus sub-hitos asociados."""
     event = get_object_or_404(TimelineEvent, pk=pk)
     if request.method == 'POST':
         event.delete()
@@ -430,3 +426,78 @@ def history_delete_view(request, pk):
         return redirect('dashboard_history_list')
     context = {'event': event}
     return render(request, 'dashboard/history_confirm_delete.html', context)
+
+# --- VISTAS CRUD PARA GESTIONAR FIXTURE ---
+
+@user_passes_test(is_superuser)
+def fixture_list_view(request):
+    fixtures = Fixture.objects.all().order_by('display_order', 'match_datetime')
+    teams = Team.objects.all()
+    context = {'fixtures': fixtures, 'teams': teams}
+    return render(request, 'dashboard/fixture_list.html', context)
+
+@user_passes_test(is_superuser)
+def fixture_update_view(request, pk=None):
+    if pk:
+        instance = get_object_or_404(Fixture, pk=pk)
+        title = "Editar Partido"
+    else:
+        instance = None
+        title = "Crear Nuevo Partido"
+
+    if request.method == 'POST':
+        form = FixtureForm(request.POST, request.FILES, instance=instance)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"Partido guardado con éxito.")
+            return redirect('dashboard_fixture_list')
+    else:
+        form = FixtureForm(instance=instance)
+
+    context = {'form': form, 'title': title}
+    return render(request, 'dashboard/fixture_form.html', context)
+
+@user_passes_test(is_superuser)
+def fixture_delete_view(request, pk):
+    fixture = get_object_or_404(Fixture, pk=pk)
+    if request.method == 'POST':
+        fixture.delete()
+        messages.success(request, "Partido eliminado con éxito.")
+        return redirect('dashboard_fixture_list')
+    
+    context = {'fixture': fixture}
+    return render(request, 'dashboard/fixture_confirm_delete.html', context)
+
+# --- VISTAS CRUD PARA GESTIONAR EQUIPOS ---
+
+@user_passes_test(is_superuser)
+def team_update_view(request, pk=None):
+    if pk:
+        instance = get_object_or_404(Team, pk=pk)
+        title = "Editar Equipo"
+    else:
+        instance = None
+        title = "Crear Nuevo Equipo"
+
+    if request.method == 'POST':
+        form = TeamForm(request.POST, request.FILES, instance=instance)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"Equipo guardado con éxito.")
+            return redirect('dashboard_fixture_list')
+    else:
+        form = TeamForm(instance=instance)
+
+    context = {'form': form, 'title': title}
+    return render(request, 'dashboard/team_form.html', context)
+
+@user_passes_test(is_superuser)
+def team_delete_view(request, pk):
+    team = get_object_or_404(Team, pk=pk)
+    if request.method == 'POST':
+        team.delete()
+        messages.success(request, "Equipo eliminado con éxito.")
+        return redirect('dashboard_fixture_list')
+        
+    context = {'team': team}
+    return render(request, 'dashboard/team_confirm_delete.html', context)
