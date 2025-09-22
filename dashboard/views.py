@@ -14,6 +14,8 @@ from members.forms import UserUpdateForm, ProfileAdminUpdateForm, RoleForm, Memb
 from billing.forms import BillableItemForm
 from gallery.models import Album, Photo
 from gallery.forms import AlbumForm
+from core.models import TimelineEvent
+from core.forms import TimelineEventForm
 
 # --- Función de Verificación ---
 def is_superuser(user):
@@ -379,3 +381,52 @@ def gallery_delete_view(request, pk):
         return redirect('dashboard_gallery_list')
     context = {'album': album}
     return render(request, 'dashboard/gallery_confirm_delete.html', context)
+
+# --- VISTAS CRUD PARA GESTIONAR HISTORIA ---
+
+@user_passes_test(is_superuser)
+def history_list_view(request):
+    """
+    Muestra una lista de todos los hitos principales y sus sub-hitos.
+    """
+    # Usamos prefetch_related para cargar los sub-hitos de forma eficiente
+    main_events = TimelineEvent.objects.filter(parent__isnull=True).prefetch_related('sub_events')
+    context = {'main_events': main_events}
+    return render(request, 'dashboard/history_list.html', context)
+
+@user_passes_test(is_superuser)
+def history_update_view(request, pk=None):
+    """
+    Crea un nuevo Hito/Sub-Hito o edita uno existente.
+    """
+    if pk:
+        instance = get_object_or_404(TimelineEvent, pk=pk)
+        title = "Editar Hito"
+    else:
+        instance = None
+        title = "Crear Nuevo Hito / Sub-Hito"
+
+    if request.method == 'POST':
+        form = TimelineEventForm(request.POST, request.FILES, instance=instance)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"Hito guardado con éxito.")
+            return redirect('dashboard_history_list')
+    else:
+        form = TimelineEventForm(instance=instance)
+
+    context = {'form': form, 'title': title}
+    return render(request, 'dashboard/history_form.html', context)
+
+@user_passes_test(is_superuser)
+def history_delete_view(request, pk):
+    """
+    Elimina un Hito y todos sus sub-hitos asociados.
+    """
+    event = get_object_or_404(TimelineEvent, pk=pk)
+    if request.method == 'POST':
+        event.delete()
+        messages.success(request, "Hito eliminado con éxito.")
+        return redirect('dashboard_history_list')
+    context = {'event': event}
+    return render(request, 'dashboard/history_confirm_delete.html', context)

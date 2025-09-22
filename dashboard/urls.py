@@ -22,4 +22,9 @@ urlpatterns = [
     path('gallery/add/', views.gallery_update_view, name='dashboard_gallery_add'),
     path('gallery/<int:pk>/edit/', views.gallery_update_view, name='dashboard_gallery_update'),
     path('gallery/<int:pk>/delete/', views.gallery_delete_view, name='dashboard_gallery_delete'),
+    # --- NUEVAS RUTAS PARA GESTIONAR HISTORIA ---
+    path('history/', views.history_list_view, name='dashboard_history_list'),
+    path('history/add/', views.history_update_view, name='dashboard_history_add'),
+    path('history/<int:pk>/edit/', views.history_update_view, name='dashboard_history_update'),
+    path('history/<int:pk>/delete/', views.history_delete_view, name='dashboard_history_delete'),
 ]
