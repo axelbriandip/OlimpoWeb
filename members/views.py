@@ -6,21 +6,25 @@ from django.conf import settings
 from collections import OrderedDict
 
 # Importamos los modelos y formularios necesarios
-from .models import Profile, Role
+from .models import Profile, Role, Category
 from .forms import MembershipApplicationForm, UserUpdateForm, ProfileUpdateForm
 from billing.forms import ReceiptUploadForm
 from billing.models import Invoice
 
 # --- Vistas del Plantel Público ---
-
 def player_list(request):
     """
-    Muestra la lista pública del plantel, mostrando solo jugadores y cuerpo técnico
-    marcados como 'En Lista Oficial', agrupados por puesto.
+    Muestra la lista pública del plantel, con un filtro opcional por categoría.
     """
     profiles_on_roster = Profile.objects.filter(is_on_roster=True)
     roles = Role.objects.filter(profile__in=profiles_on_roster).select_related('profile', 'category', 'specific_position')
 
+    # --- LÓGICA DE FILTRO ---
+    category_filter_id = request.GET.get('category')
+    if category_filter_id:
+        roles = roles.filter(category__id=category_filter_id)
+
+    # ... (la lógica de agrupación no cambia) ...
     grouped_players = OrderedDict()
     position_map = OrderedDict([
         ('Arqueros', ['Arquero']),
@@ -37,9 +41,12 @@ def player_list(request):
         if roles_in_group:
             grouped_players[group_title] = sorted(roles_in_group, key=lambda r: r.profile.user.last_name)
     
-    context = {'grouped_players': grouped_players}
+    context = {
+        'grouped_players': grouped_players,
+        'categories': Category.objects.all(), # Enviamos todas las categorías para los botones
+        'selected_category_id': category_filter_id,
+    }
     return render(request, 'members/player_list.html', context)
-
 def player_detail(request, pk):
     """
     Muestra la ficha individual de un jugador o miembro del staff.

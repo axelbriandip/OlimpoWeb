@@ -8,6 +8,17 @@
     <p class="lead text-muted">Conocé a quienes defienden nuestros colores en la lista de buena fe.</p>
 </div>
 
+<div class="text-center mb-5">
+    <a href="{% url 'player_list' %}" class="btn {% if not selected_category_id %}btn-primary{% else %}btn-outline-primary{% endif %} m-1">
+        Todos
+    </a>
+    {% for category in categories %}
+        <a href="{% url 'player_list' %}?category={{ category.id }}" class="btn {% if selected_category_id == category.id|stringformat:"s" %}btn-primary{% else %}btn-outline-primary{% endif %} m-1">
+            {{ category.name }}
+        </a>
+    {% endfor %}
+</div>
+
 {% for group_title, roles_in_group in grouped_players.items %}
     <div class="position-group mb-5">
         <h2 class="position-title">{{ group_title }}</h2>
