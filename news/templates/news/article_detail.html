@@ -5,6 +5,7 @@
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-lg-8">
+        
         <h1 class="display-5">{{ article.title }}</h1>
         <p class="lead">{{ article.subtitle }}</p>
         <p class="text-muted">Publicado el {{ article.created_on|date:"d F, Y" }}</p>
@@ -19,6 +20,17 @@
         <div class="article-content">
             {{ article.content|linebreaks }}
         </div>
+
+        <div class="my-4 d-flex gap-2">
+            {% with share_url=request.build_absolute_uri %}{% with share_text=article.title|add:" - Leé la nota completa en: "|add:share_url %}
+                <a href="https://wa.me/?text={{ share_text|urlencode }}" class="btn btn-success" target="_blank" rel="noopener noreferrer"><i class="bi bi-whatsapp"></i> WhatsApp</a>
+            {% endwith %}{% endwith %}
+
+            <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri|urlencode }}" class="btn" style="background-color: #1877F2; color: white;" target="_blank" rel="noopener noreferrer"><i class="bi bi-facebook"></i> Facebook</a>
+
+            <button class="btn" style="background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);" onclick="copyLink()" id="copyLinkBtn"><i class="bi bi-instagram" style="color: white;"></i> <span style="color: white;">Copiar Enlace</span></button>
+        </div>
+
         {% if recommended_articles %}
             <div class="recommended-news mt-5">
                 <h3 class="mb-4">También te puede interesar</h3>
@@ -44,7 +56,8 @@
         {% endif %}
 
         <a href="{% url 'news_list' %}" class="btn btn-secondary"><< Volver a Noticias</a>
-    </div>
+        
+        </div>
 </div>
 
 <hr class="my-5">
