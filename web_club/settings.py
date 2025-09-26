@@ -28,8 +28,8 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = [
-    'olimporiogrande.com.ar',
-    'tunombredeusuario.pythonanywhere.com', # <-- Reemplaza con tu futuro usuario de PythonAnywhere
+    'olimporiogrande.pythonanywhere.com', # <-- El dominio principal
+    'www.olimporiogrande.pythonanywhere.com', # <-- Es buena idea añadir la versión 'www' también
     '127.0.0.1', # Mantenemos localhost para seguir probando en tu PC
 ]
 
