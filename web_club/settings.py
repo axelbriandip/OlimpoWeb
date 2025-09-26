@@ -27,7 +27,11 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'olimporiogrande.com.ar',
+    'tunombredeusuario.pythonanywhere.com', # <-- Reemplaza con tu futuro usuario de PythonAnywhere
+    '127.0.0.1', # Mantenemos localhost para seguir probando en tu PC
+]
 
 # Application definition
 
