@@ -139,7 +139,7 @@
         <p class="mb-0"><small>Diseño y Desarrollo por <strong><a href="#">Axel Brian Dip</a></strong></small></p>
         {% if user.is_authenticated and user.is_staff %}
           <p class="mb-2 mb-md-0">
-              <small><a href="{% url 'admin:index' %}" class="admin-link">Panel de Administrador</a></small>
+              <small><a href="{% url 'dashboard:index' %}" class="admin-link">Panel de Administrador</a></small>
           </p>
         {% endif %}
       </div>
